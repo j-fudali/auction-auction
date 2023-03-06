@@ -1,0 +1,16 @@
+<mat-sidenav-container *ngIf="{isLtMd: isLtMd$ | async} as media">
+    <mat-sidenav  [mode]="media.isLtMd ? 'over' : 'side'" #sidenav>
+        <button (click)="sidenav.close()" mat-icon-button><mat-icon>close</mat-icon></button>
+        <mat-nav-list>
+            <a mat-list-item routerLink="">Profile</a>
+            <a mat-list-item routerLink="">My products</a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <app-header (logoutEvent)="logout()" (toggleSidenavMenu)="sidenav.toggle()"></app-header>
+        <div class="pages">
+            <router-outlet></router-outlet>
+        </div>
+        <app-footer></app-footer>
+    </mat-sidenav-content>
+</mat-sidenav-container>

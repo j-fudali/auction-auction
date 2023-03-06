@@ -1,0 +1,13 @@
+@use '/src/styles.scss' as styles;
+@use '@angular/material' as mat;
+.container{
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.notSuccessful{
+    color: mat.get-color-from-palette(styles.$warn-palette, 500);
+}

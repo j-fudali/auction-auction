@@ -1,0 +1,58 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="newUserForm">
+  <h2>Sign up</h2>
+  <mat-form-field>
+    <mat-label>E-mail</mat-label>
+    <input matInput type="text" formControlName="email">
+    <mat-error *ngIf="email?.hasError('email')"><small>Invalid e-mail format</small></mat-error>
+    <mat-error *ngIf="email?.hasError('required')"><small>Required field</small></mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Username</mat-label>
+    <input matInput type="text" formControlName="username">
+    <mat-error *ngIf="username?.hasError('required')"><small>Required field</small></mat-error>
+    <mat-error *ngIf="username?.hasError('minlength')"><small>Min. 1 character</small></mat-error>
+    <mat-error *ngIf="username?.hasError('maxlength')"><small>Max. 30 characters</small></mat-error>
+  </mat-form-field>
+  
+  <mat-form-field>
+    <mat-label>Firstname</mat-label>
+    <input matInput type="text" formControlName="firstName">
+    <mat-error *ngIf="firstName?.hasError('required')"><small>Required field</small></mat-error>
+    <mat-error *ngIf="firstName?.hasError('minlength')"><small>Min. 1 character</small></mat-error>
+    <mat-error *ngIf="firstName?.hasError('maxlength')"><small>Max. 30 characters</small></mat-error>
+  </mat-form-field>
+  
+  <mat-form-field>
+    <mat-label>Lastname</mat-label>
+    <input matInput type="text" formControlName="lastName">
+    <mat-error *ngIf="lastName?.hasError('required')"><small>Required field</small></mat-error>
+    <mat-error *ngIf="lastName?.hasError('minlength')"><small>Min. 1 character</small></mat-error>
+    <mat-error *ngIf="lastName?.hasError('maxlength')"><small>Max. 30 characters</small></mat-error>
+    
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Birth date</mat-label>
+    <input [matDatepicker]="dp" [max]="today" matInput formControlName="birthDate">
+    <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+    <mat-datepicker #dp></mat-datepicker>
+    <mat-error *ngIf="birthDate?.hasError('required')"><small>Required field</small></mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Password</mat-label>
+    <input matInput type="password" formControlName="password">
+    <mat-error *ngIf="password?.hasError('required')"><small>Required field</small></mat-error>
+    <mat-error class="pattern-error" *ngIf="password?.hasError('pattern')"><small>Password format invalid</small><mat-icon matTooltip="It has to contain 1 small, 1 big letter, 1 digit, 1 special character, min. 8 and max. 25 characters">info</mat-icon></mat-error>
+  </mat-form-field>
+  
+  <mat-form-field>
+    <mat-label>Repeat password</mat-label>
+    <input  matInput type="password" formControlName="rePassword">
+    <mat-error *ngIf="rePassword?.hasError('required')"><small>Required field</small></mat-error>
+    <mat-error *ngIf="rePassword?.hasError('passwordsNotMatch')"><small>Passwords are not the same</small></mat-error>
+  </mat-form-field>
+
+  <button [disabled]="!newUserForm.valid" mat-stroked-button type="submit">Create account</button>
+</form>

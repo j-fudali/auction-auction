@@ -1,0 +1,15 @@
+<form class="signup-form" ngForm="signup" (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+  <h2>Login</h2>
+  <mat-form-field>
+    <mat-label>Username or e-mail</mat-label>
+    <input matInput type="text" formControlName="usernameOrEmail">
+    <mat-error *ngIf="usernameOrEmail?.hasError('required')"><small>Field is required</small></mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Password</mat-label>
+    <input matInput type="password" formControlName="password">
+    <mat-error *ngIf="password?.hasError('required')"><small>Field is required</small></mat-error>
+  </mat-form-field>
+  <button [disabled]="!loginForm.valid" mat-stroked-button type="submit">Log-in</button>
+  <a mat-stroked-button routerLink="/home/reset-password"><small>Don't remember password?</small> </a>
+</form>

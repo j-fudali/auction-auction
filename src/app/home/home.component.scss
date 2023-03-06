@@ -1,0 +1,42 @@
+@use '/src/styles.scss' as styles;
+.container{
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+}
+.md-or-lt-md{
+  flex-direction: column;
+  
+}
+.gt-md{
+  flex-direction: row;
+
+}
+.title{
+  color: #fff;
+  min-width: 50%;
+  height: 100vh;
+  background-color: styles.$primary-600;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  h1{
+    margin: 0;
+    font-size: 48px;
+  }
+  h3{
+    margin-top: 0;
+  }
+  div{
+    display: flex;
+    gap: 5px;
+  }
+}
+.pages{
+  min-width: 50%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,0 +1,29 @@
+<form [formGroup]="filtersForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+        <mat-label>Search</mat-label>
+        <input type="text" formControlName="search" matInput>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Order</mat-label>
+        <mat-select  formControlName="orderBy">
+            <mat-option>None</mat-option>
+            <mat-optgroup label="By starting time">
+                <mat-option value="newest">Newest</mat-option>
+                <mat-option value="oldest">Oldest</mat-option>
+            </mat-optgroup>
+            <mat-optgroup label="By price">
+                <mat-option value="highest">Highest</mat-option>
+                <mat-option value="lowest">Lowest</mat-option>
+            </mat-optgroup>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="category">
+            <mat-option>None</mat-option>
+            <mat-option>Cat1</mat-option>
+            <mat-option>Cat2</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <button mat-stroked-button>Filter</button>
+</form>
