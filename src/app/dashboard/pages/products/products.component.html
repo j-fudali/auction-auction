@@ -1,13 +1,12 @@
-<mat-drawer-container>
-    <mat-drawer opened mode="side">
-        <app-filters-panel></app-filters-panel>
+<mat-drawer-container class="container">
+    <mat-drawer class="sidenav" opened mode="side">
+        <app-filters-panel (onFilterProducts)="filterProducts($event)"></app-filters-panel>
     </mat-drawer>
     <mat-drawer-content >
-        <div #scrollTo></div>
         <div class="spinner-wrapper" *ngIf="productsDataSource.loading$ | async">
             <mat-spinner color="accent"></mat-spinner>
         </div>
-        <app-products-table  (onRedirectToProductDetails)="redirectToProductView($event)" [productsDataSource]="productsDataSource"></app-products-table>
+        <app-products-table (onBid)="openBidModal($event)"  (onRedirectToProductDetails)="redirectToProductView($event)" [productsDataSource]="productsDataSource"></app-products-table>
         <mat-paginator #paginator hidePageSize [length]="itemsCount$ | async" [pageSize]="5"></mat-paginator>
     </mat-drawer-content>
 </mat-drawer-container>

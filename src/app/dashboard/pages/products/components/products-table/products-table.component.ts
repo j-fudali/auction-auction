@@ -7,11 +7,12 @@ import { ItemsTableDataSourceService } from 'src/app/core/util/items-table-data-
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-products-table',
   standalone: true,
-  imports: [CommonModule, MatTableModule, TimeLeftPipe, MatIconModule, MatButtonModule],
+  imports: [CommonModule, MatTableModule, TimeLeftPipe, MatIconModule, MatButtonModule, RouterModule],
   templateUrl: './products-table.component.html',
   styleUrls: ['./products-table.component.scss'],
   animations: [
@@ -25,10 +26,14 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 export class ProductsTableComponent {
   @Input() productsDataSource: ItemsTableDataSourceService;
   @Output() onRedirectToProductDetails = new EventEmitter<number>();
-  displayedColumns = ['image', 'name', 'category', 'ending_price', 'timeout']
-  columnsToDisplayWithExpand = [...this.displayedColumns, 'expand']
+  @Output() onBid = new EventEmitter<{idItem: number, minBidPrice: number}>()
+  displayedColumns = ['image', 'name', 'category', 'ending_price', 'timeout', 'bid', 'expand']
   expandedElement: Item | null;
   goToDetails(item: Item){
     this.onRedirectToProductDetails.emit(item.id_item)
+  }
+  bid(idItem: number, minBidPriceText: string){
+    const minBidPrice: number = +minBidPriceText
+    this.onBid.emit({idItem, minBidPrice})
   }
 }

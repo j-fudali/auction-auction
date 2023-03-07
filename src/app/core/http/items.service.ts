@@ -6,6 +6,7 @@ import { AuthService } from '../auth/auth.service';
 import { ErrorHandlerService } from '../util/error-handler.service';
 import { environment } from 'src/environments/environment';
 import { Item } from 'src/app/shared/interfaces/item/item';
+import { ItemsFilters } from 'src/app/shared/interfaces/item/items-filters';
 
 @Injectable({
   providedIn: 'root'
@@ -21,13 +22,12 @@ export class ItemsService {
   private itemCountSubject = new BehaviorSubject<number>(0);
   public itemsCount$ = this.itemCountSubject.asObservable()
 
-  getItems(page?: number, orderBy?: string, category?: string, search?: string): Observable<Item[]>{
+  getItems(itemsFilters?: ItemsFilters): Observable<Item[]>{
     let params = new HttpParams()
-    if(page) params = params.set("page", page)
-    if(orderBy) params = params.set("order_by", orderBy)
-    if(category) params = params.set("category", category)
-    if(search) params = params.set("search", search)
-    console.log(params)
+    if(itemsFilters && itemsFilters.page) params = params.set("page", itemsFilters.page)
+    if(itemsFilters && itemsFilters.orderBy) params = params.set("order_by", itemsFilters.orderBy)
+    if(itemsFilters && itemsFilters.category) params = params.set("category", itemsFilters.category)
+    if(itemsFilters && itemsFilters.search) params = params.set("search", itemsFilters.search)
     return this.http.get<{current_page: number, pages: number,items_count: number, result: Item[]}>(this.baseUrl, {params: params}).pipe(
       map( res => {
         this.itemCountSubject.next(res.items_count)

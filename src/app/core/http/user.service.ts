@@ -28,8 +28,8 @@ export class UserService {
     const header = new HttpHeaders().set('Authorization', `JWT${token}`);
     return this.http.get<User>(this.baseUrl + '/' + id, {headers: header});
   }
-  createUser(newUser: NewUser){
-    return this.http.post(this.baseUrl + '/register', newUser)
+  createUser(newUser: NewUser): Observable<{message: string} | null>{
+    return this.http.post<{message: string}>(this.baseUrl + '/register', newUser)
     .pipe(
       catchError((err: HttpErrorResponse) => {
         if(err.status === 400){

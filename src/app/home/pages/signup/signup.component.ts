@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
-import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -9,6 +9,12 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { DateTime, Duration } from "luxon";
 import { validatePassword } from "src/app/shared/validators/confirm-password.validator";
 import { MatIconModule } from '@angular/material/icon';
+import { NewUser } from "src/app/shared/interfaces/user/new-user";
+import { UserService } from "src/app/core/http/user.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { Router } from "@angular/router";
+
+
 @Component({
   standalone: true,
   imports: [
@@ -26,10 +32,12 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class SignupComponent {
   private fb: FormBuilder = inject(FormBuilder);
-
+  private userService = inject(UserService)
+  private snackbar = inject(MatSnackBar)
+  private router = inject(Router)
   today = DateTime.now().minus(Duration.fromObject({ day: 1 }));
 
-  newUserForm = this.fb.nonNullable.group(
+  newUserForm = this.fb.group(
     {
       username: ["", [Validators.required, Validators.minLength(1), Validators.maxLength(30)]],
       firstName: ["",[ Validators.required, Validators.minLength(1), Validators.maxLength(30)]],
@@ -73,6 +81,19 @@ export class SignupComponent {
   }
 
   onSubmit() {
-    // this._userService.createUser(user).subscribe()
+    if(this.newUserForm.dirty && this.newUserForm.valid){
+      const newUser: NewUser = {
+        username: this.newUserForm.get('username')?.value!,
+        last_name: this.newUserForm.get('firstName')?.value!,
+        first_name: this.newUserForm.get('lastname')?.value!,
+        password: this.newUserForm.get('password')?.value!,
+        email: this.newUserForm.get('email')?.value!,
+        birth_date: this.newUserForm.get('birthDate')?.value!
+      }     
+      this.userService.createUser(newUser)
+        .subscribe(() => {
+          this.router.navigate(['/home/login'])
+          this.snackbar.open('Account has been created. Check your e-mail to activated it', 'X')})
+    }
   }
 }

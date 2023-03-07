@@ -8,9 +8,7 @@
     </mat-sidenav>
     <mat-sidenav-content>
         <app-header (logoutEvent)="logout()" (toggleSidenavMenu)="sidenav.toggle()"></app-header>
-        <div class="pages">
-            <router-outlet></router-outlet>
-        </div>
+        <router-outlet></router-outlet>
         <app-footer></app-footer>
     </mat-sidenav-content>
 </mat-sidenav-container>

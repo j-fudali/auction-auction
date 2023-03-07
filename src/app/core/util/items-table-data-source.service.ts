@@ -1,8 +1,9 @@
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 import { Item } from 'src/app/shared/interfaces/item/item';
+import { ItemsFilters } from 'src/app/shared/interfaces/item/items-filters';
 import { ItemsService } from '../http/items.service';
 
 @Injectable({
@@ -19,12 +20,22 @@ export class ItemsTableDataSourceService implements DataSource<Item>{
   disconnect(collectionViewer: CollectionViewer): void {
     this.itemsSubject.complete()
   }
-  loadProducts(page?: number, orderBy?: string, category?: string, search?: string): void {
+  loadProducts(itemsFilters?: ItemsFilters): void {
     this.loadingSubject.next(true)
-    this.itemsService.getItems(page, orderBy, category, search)
+    this.itemsService.getItems(itemsFilters)
     .pipe(
       finalize(() => this.loadingSubject.next(false))
       )
     .subscribe( items => this.itemsSubject.next(items))
+  }
+  updateMaxBid(price: number, idItem: number){
+    const items = this.itemsSubject.getValue()
+    const updateItems = items.map( i => {
+      if(i.id_item === idItem){
+        i.max_bid = price
+      }
+      return i
+    })
+    this.itemsSubject.next(updateItems);
   }
 }

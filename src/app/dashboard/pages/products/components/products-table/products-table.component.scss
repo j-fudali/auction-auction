@@ -1,6 +1,4 @@
-table {
-  width: 100%;
-}
+
 .preview-image {
   max-width: 10vw;
   padding: 5px;
@@ -33,18 +31,14 @@ tr.products-element-row:not(.product-expanded-row):active {
   overflow: hidden;
   display: flex;
   justify-content: space-between;
-//   margin-top: 10px;
-  padding: 0 10px;
+  div{
+    padding: 10px;
+
+  }
 }
-.product-creator{
+.product-actions{
     display: flex;
     flex-direction: column;
-    h4{
-        margin: 0;
-    }
+    gap: 5px;
 }
-.avatar-wrapper{
-    img{
-        object-fit: contain;
-    }
-}
+
