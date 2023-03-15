@@ -1,0 +1,38 @@
+<div class="container" *ngIf="{isLtMd: (isLtMd$ | async)} as bp">
+    <div class="image-wrapper" [ngClass]="bp.isLtMd? 'image-wrapper-lt-md' : 'image-wrapper-md-higher'">
+        <img  [ngSrc]="product.image || '../../../../assets/noimage.jpg'" priority fill>
+    </div>
+    <div class="content">
+        <div class="header">
+            <h2>{{product.name}}</h2>
+            <div>
+                <ng-container *ngIf="userId">
+                    <ng-container *ngIf="product.id_bidder == userId; else owner">
+                        <h4>You already bidded this product</h4>
+                    </ng-container>
+                    <ng-template #owner>
+                        <ng-container *ngIf="product.creator.id_user == userId; else canBid">
+                            <h4>You are an owner of this product</h4>
+                        </ng-container>
+                    </ng-template>
+                    <ng-template #canBid>
+                        <button  mat-fab (click)="bid()"><mat-icon>add_shopping_cart</mat-icon></button>
+                    </ng-template>
+                </ng-container>
+                <h4>Actual price: {{product.max_bid || product.starting_price}}</h4>
+            </div>
+        </div>
+        <div class="details">
+            <div *ngIf="!bp.isLtMd">
+                <h3>Description</h3>
+                <p>{{product.description}}</p>
+            </div>
+            <mat-chip>{{product.category}}</mat-chip>
+            <div class="details-footer">
+                <small>Time left: <i>{{product.ending_time | timeLeft | async}}</i></small>
+                <a mat-stroked-button [routerLink]="['/dashboard/products', product.id_item]">More</a>
+            </div>
+        </div>
+
+    </div>
+</div>

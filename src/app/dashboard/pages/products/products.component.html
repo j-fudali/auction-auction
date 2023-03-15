@@ -1,12 +1,25 @@
-<mat-drawer-container class="container">
-    <mat-drawer class="sidenav" opened mode="side">
-        <app-filters-panel (onFilterProducts)="filterProducts($event)"></app-filters-panel>
+<mat-drawer-container class="container" *ngIf="isLtMd$ | async as isLtMd"
+    [style.margin]="isLtMd.matches ? '25px 10px 0 10px' : '25px 50px 0 50px'">
+    <mat-drawer #drawer class="sidenav" [opened]="!isLtMd.matches" [mode]="isLtMd.matches ? 'over' : 'side'">
+        <app-filters-panel [categories]="categories$ | async" (onClose)="drawer.close()" (onFilterProducts)="filterProducts($event)"></app-filters-panel>
     </mat-drawer>
-    <mat-drawer-content >
-        <div class="spinner-wrapper" *ngIf="productsDataSource.loading$ | async">
+    <mat-drawer-content class="content">
+        <div class="spinner-wrapper" *ngIf="loading">
             <mat-spinner color="accent"></mat-spinner>
         </div>
-        <app-products-table (onBid)="openBidModal($event)"  (onRedirectToProductDetails)="redirectToProductView($event)" [productsDataSource]="productsDataSource"></app-products-table>
-        <mat-paginator #paginator hidePageSize [length]="itemsCount$ | async" [pageSize]="5"></mat-paginator>
+        <div class="actions-buttons">
+            <div>
+                <button mat-stroked-button *ngIf="isLtMd.matches"(click)="drawer.toggle()">Filter<mat-icon>filter_list</mat-icon></button>
+                <button *ngIf="itemsCount !== 0" (click)="reload()" mat-icon-button><mat-icon>refresh</mat-icon></button>
+            </div>
+            <button *ngIf="isAuthenticated" (click)="createAuction()" mat-fab><mat-icon>add</mat-icon></button>
+        </div>
+        <ng-container *ngIf="itemsCount !== 0; else noItems">
+            <app-products-list  [products]="products"></app-products-list>
+            <mat-paginator (page)="onPageChange($event)" hidePageSize [length]="itemsCount" [pageSize]="5"></mat-paginator>
+        </ng-container>
+        <ng-template #noItems>
+            <h2>No avaliable auctions to bid!</h2>
+        </ng-template>
     </mat-drawer-content>
 </mat-drawer-container>

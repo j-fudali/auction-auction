@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -13,6 +13,7 @@ import { NewUser } from "src/app/shared/interfaces/user/new-user";
 import { UserService } from "src/app/core/http/user.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
+import { tap } from "rxjs/operators";
 
 
 @Component({
@@ -43,7 +44,7 @@ export class SignupComponent {
       firstName: ["",[ Validators.required, Validators.minLength(1), Validators.maxLength(30)]],
       lastName: ["", [Validators.required, Validators.minLength(1), Validators.maxLength(30)]],
       email: ["", [Validators.required, Validators.email]],
-      birthDate: ["", Validators.required],
+      birthDate: [null, Validators.required],
       password: [
         "",
         [
@@ -83,17 +84,23 @@ export class SignupComponent {
   onSubmit() {
     if(this.newUserForm.dirty && this.newUserForm.valid){
       const newUser: NewUser = {
-        username: this.newUserForm.get('username')?.value!,
-        last_name: this.newUserForm.get('firstName')?.value!,
-        first_name: this.newUserForm.get('lastname')?.value!,
-        password: this.newUserForm.get('password')?.value!,
-        email: this.newUserForm.get('email')?.value!,
-        birth_date: this.newUserForm.get('birthDate')?.value!
+        username: this.username?.value!,
+        last_name: this.firstName?.value!,
+        first_name: this.lastName?.value!,
+        password: this.password?.value!,
+        email: this.email?.value!,
+        birth_date: (this.birthDate?.value! as DateTime).toFormat('dd.MM.yyyy')
       }     
       this.userService.createUser(newUser)
-        .subscribe(() => {
-          this.router.navigate(['/home/login'])
-          this.snackbar.open('Account has been created. Check your e-mail to activated it', 'X')})
-    }
+        .pipe(
+          tap( (res) => {
+            if(res){
+              this.router.navigate(['/home/login'])
+              this.snackbar.open('Account has been created. Check your e-mail to activated it', 'X')
+            }
+          })
+        )
+        .subscribe()
+       }
   }
 }

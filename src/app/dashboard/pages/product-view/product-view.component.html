@@ -1,1 +1,83 @@
-<p>product-view works!</p>
+<ng-container *ngIf="product; else noProduct">
+    <div *ngIf="{isLtGt: (isLtGt$ | async)} as bp" [ngClass]="bp.isLtGt ? 'lt-gt' : 'gt-and-higher'" class="container">
+        <section  class="slider-panel" [ngClass]="bp.isLtGt ? 'lt-gt' : 'gt-and-higher'">
+            <button *ngIf="product.images.length > 1 && product.images[0] != ''" color="primary" (click)="previous()" mat-mini-fab><mat-icon>arrow_left</mat-icon></button>
+            <div class="slider" [style.transform]="'translateX(' + translateX + '%)'"> 
+                <ng-container *ngIf="product.images.length > 0 && product.images[0] != ''; else noImages">
+                    <div [matTooltip]="!isZoomed ? 'Click to see all of the image' : ''" (click)="isZoomed = !isZoomed"  *ngFor="let img of product.images" class="image-wrapper">
+                        <img [style.objectFit]="isZoomed ? 'contain' : 'cover'" [ngSrc]="img" fill priority>
+                    </div>
+                </ng-container>
+                <ng-template #noImages>
+                    <div class="image-wrapper no-images">
+                        <img [ngSrc]="'../../../assets/noimage.jpg'" fill priority>
+                    </div>
+                </ng-template>
+            </div>
+            <button *ngIf="product.images.length > 1 && product.images[0] != ''" color="primary" (click)="next()" mat-mini-fab><mat-icon>arrow_right</mat-icon></button>
+        </section>
+        <section class="title-section" [ngClass]="bp.isLtGt ? 'lt-gt' : 'gt-and-higher'">
+            <div>
+                <h2>{{product.name}}</h2>
+            </div>
+        </section>
+        <section class="bottom-section" [ngClass]="bp.isLtGt ? 'lt-gt' : 'gt-and-higher'">
+            <h3>Details</h3>
+            <mat-divider></mat-divider>
+            <section class="bottom-section-middle" [ngClass]="bp.isLtGt ? 'lt-gt' : 'gt-and-higher'">
+                <div>
+                    <h4>Starting price: <i>{{product.starting_price}}</i></h4>
+                    <h4>Starting time: <i>{{product.starting_time | date:'dd-MM-yyyy hh:mm:ss':'GMT+2'}}</i></h4>
+                    <h4>Category: <i>{{product.category}}</i></h4>
+                    <h4></h4>
+                </div>
+                <div class="creator">
+                    <h4>Owner</h4>
+                    <div class="image-wrapper-creator">
+                        <img [ngSrc]="product.creator.avatar" priority fill>
+                    </div>
+                    <h5>{{product.creator.username}}</h5>
+                    <h6>Last online: {{product.creator.last_online | date:'dd-MM-yyy hh:mm:ss':'GMT+2'}}</h6>
+                </div>
+            </section>
+            <h3>Description</h3>
+            <mat-divider></mat-divider>
+            <p>{{product.description}}</p>
+        </section>
+    </div>
+    <mat-card  class="bid-status">
+        <ng-container *ngIf="!(+product.is_closed); else closed">
+            <h4 mat-card-title>Actual price: {{product.max_bid || product.starting_price}}</h4>
+            <mat-card-content>
+                <ng-container *ngIf="product.is_closed; else closed">
+                    <h5>Time left: {{product.ending_time | timeLeft | async}}</h5>
+                </ng-container>
+                <ng-template #closed>
+                    <h4>Ended</h4>
+                </ng-template>
+            </mat-card-content>
+            <mat-card-actions *ngIf="userId">
+                <ng-container *ngIf="product.id_bidder == userId; else owner">
+                    <button mat-flat-button disabled><h4>You already bidded this product</h4></button>
+                </ng-container>
+                <ng-template #owner>
+                    <ng-container *ngIf="product.creator.id_user == userId; else canBid">
+                        <button mat-flat-button disabled><h4>You are an owner of this product</h4></button>
+                    </ng-container>
+                </ng-template>
+                <ng-template #canBid>
+                    <button  mat-fab (click)="bid()"><mat-icon>add_shopping_cart</mat-icon></button>
+                </ng-template>
+            </mat-card-actions>
+        </ng-container>
+        <ng-template #closed>
+            <mat-card-content>
+                <h4>Auction has been closed</h4>
+                <h5>Winning price: {{product.ending_price || product.max_bid}}</h5>
+            </mat-card-content>
+        </ng-template>
+    </mat-card>
+</ng-container>
+<ng-template #noProduct>
+    <h2>Product not found</h2>
+</ng-template>

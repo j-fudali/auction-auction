@@ -25,7 +25,7 @@ export class BidService {
         if(err.status === 422){
           this.errorHandler.showError('Issue with bidding of item. Probably item doesn\'t exists,you bidded it already, or it\'s price is different. Try it again later')
         }
-        return throwError(err);
+        return of(null);
       })
     )
   }

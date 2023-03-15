@@ -1,6 +1,7 @@
 import { Router } from '@angular/router';
 import { inject, Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,14 @@ import { CookieService } from 'ngx-cookie-service';
 export class AuthService {
   private cookies: CookieService = inject(CookieService)
   private router: Router = inject(Router)
-
+  private userIdSubject = new BehaviorSubject<string>('');
+  userId$: Observable<string> = this.userIdSubject.asObservable()
+  setUserId(id: string){
+    this.userIdSubject.next(id);
+  }
+  getUserId(): string | null {
+    return this.userIdSubject.getValue() || null;
+  }
   isAuthenticated() {
     return this.cookies.get('token') ? true : false;
   }

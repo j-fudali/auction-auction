@@ -53,8 +53,8 @@ import { MatButtonModule } from "@angular/material/button";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BidModalComponent  {
-  data: { idItem: number; minBidPrice: number } = inject(MAT_DIALOG_DATA);
-  minBidPriceAllowed = this.data.minBidPrice+0.01
+  data: { idItem: number; price: number } = inject(MAT_DIALOG_DATA);
+  minBidPriceAllowed = this.data.price+0.01
   price = new FormControl<number>(this.minBidPriceAllowed, {
     nonNullable: true,
     validators: [

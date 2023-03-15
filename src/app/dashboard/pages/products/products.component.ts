@@ -1,95 +1,115 @@
 import {
-  AfterViewInit,
+  AfterContentInit,
   Component,
-  ElementRef,
   inject,
-  OnDestroy,
+  OnChanges,
   OnInit,
-  ViewChild,
+  SimpleChanges,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { MatTable, MatTableModule } from "@angular/material/table";
 import { ItemsService } from "src/app/core/http/items.service";
-import { MatDrawerContent, MatSidenavModule } from "@angular/material/sidenav";
-import { ProductsTableComponent } from "./components/products-table/products-table.component";
+import { MatSidenavModule } from "@angular/material/sidenav";
 import { FiltersPanelComponent } from "./components/filters-panel/filters-panel.component";
-import { ItemsTableDataSourceService } from "src/app/core/util/items-table-data-source.service";
-import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
+import { MatPaginatorModule, PageEvent } from "@angular/material/paginator";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { switchMap, tap } from "rxjs/operators";
-import { Observable, Subscription } from "rxjs";
-import { Router } from "@angular/router";
+import { catchError, filter, finalize, map, take, takeUntil, tap } from "rxjs/operators";
+import { Observable, of, Subscription, throwError } from "rxjs";
 import { ItemsFilters } from "src/app/shared/interfaces/item/items-filters";
-import { MatDialog, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
-import { BidModalComponent } from "./components/bid-modal/bid-modal.component";
-import { BidService } from "src/app/core/http/bid.service";
+import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { ProductsListComponent } from "./components/products-list/products-list.component";
+import { Item } from "src/app/shared/interfaces/item/item";
+import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from "@angular/router";
+import { AuthService } from "src/app/core/auth/auth.service";
+import { CategoriesService } from "src/app/core/http/categories.service";
+import { Category } from "src/app/shared/interfaces/category/category";
+import { UserService } from "src/app/core/http/user.service";
+import { MatDialog } from "@angular/material/dialog";
+import { CreateAuctionModalComponent } from "./components/create-auction-modal/create-auction-modal.component";
+
+
 @Component({
   standalone: true,
   imports: [
     CommonModule,
     MatSidenavModule,
-    ProductsTableComponent,
     FiltersPanelComponent,
-    MatPaginatorModule,
     MatProgressSpinnerModule,
-    MatDialogModule,
+    MatButtonModule,
+    MatIconModule,
+    ProductsListComponent,
+    MatPaginatorModule,
   ],
   templateUrl: "./products.component.html",
   styleUrls: ["./products.component.scss"],
 })
-export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
-  private itemsService = inject(ItemsService);
-  private bidService = inject(BidService)
-  private router = inject(Router);
-  private modal = inject(MatDialog);
-  @ViewChild("paginator") paginator: MatPaginator;
-  private sub: Subscription;
-  productsDataSource: ItemsTableDataSourceService;
-  itemsCount$ = this.itemsService.itemsCount$;
-  itemsFilters: ItemsFilters | null;
+export class ProductsComponent implements OnInit {
+  private itemService = inject(ItemsService);
+  private breakpoints = inject(BreakpointObserver);
+  private categoriesService = inject(CategoriesService);
+  private authService = inject(AuthService)
+  private route = inject(ActivatedRoute)
+  private dialog = inject(MatDialog)
+  isLtMd$ = this.breakpoints.observe([Breakpoints.XSmall, Breakpoints.Small]);
+
+  //State
+  isAuthenticated: boolean = false
+  products: Item[];
+
+  categories$: Observable<Category[]>;
+  loading: boolean;
+  itemsCount: number;
+
+  itemsFilters: ItemsFilters | undefined = undefined;
+  bidPrice: number;
+
   ngOnInit(): void {
-    this.productsDataSource = new ItemsTableDataSourceService(
-      this.itemsService
-    );
-    this.productsDataSource.loadProducts();
-  }
-  ngAfterViewInit(): void {
-    this.sub = this.paginator.page
-      .pipe(
-        tap(() => {
-          if (this.itemsFilters) {
-            this.itemsFilters;
-          }
-          const filter: ItemsFilters = { page: this.paginator.pageIndex + 1 };
-          this.productsDataSource.loadProducts(filter);
-        })
-      )
-      .subscribe();
-  }
-  filterProducts(itemsFilter: ItemsFilters) {
-    this.itemsFilters = itemsFilter;
-  }
-  redirectToProductView(id: number) {
-    this.router.navigate(["/dashboard/product/", id]);
+    this.authService.setUserId(this.route.snapshot.data.userId)
+    this.isAuthenticated = this.authService.isAuthenticated()
+    this.itemsCount = +this.route.snapshot.data.products.items_count
+    this.products = this.route.snapshot.data.products.result
+    this.categories$ = this.categoriesService.getCategories();
   }
 
-  openBidModal({idItem, minBidPrice}: {idItem: number, minBidPrice: number}) {
-    const dialogRef = this.modal.open(BidModalComponent, {
+  createAuction(){
+    const dialogRef = this.dialog.open(CreateAuctionModalComponent, {
       data: {
-        idItem,
-        minBidPrice
+        categories$: this.categories$,
       },
-      maxHeight: 300,
-      maxWidth: 300      
     })
-    dialogRef.afterClosed().pipe(
-      tap((bidPrice) => this.productsDataSource.updateMaxBid(bidPrice, idItem)),
-      switchMap(bidPrice => this.bidService.bid(idItem, bidPrice))
-    )
-    .subscribe()
+    dialogRef.afterClosed().subscribe(console.log)  
   }
 
-  ngOnDestroy(): void {
-    this.sub.unsubscribe();
+  onPageChange(page: PageEvent) {
+    if(this.itemsFilters) {
+      this.itemsFilters.page = page.pageIndex + 1
+    }
+    else {
+      this.itemsFilters = {page: page.pageIndex + 1}
+    }
+    this.loadProducts();
+  }
+  reload(){
+    this.loadProducts();
+  }
+  filterProducts(itemsFilters: ItemsFilters) {
+    if (!itemsFilters) this.itemsFilters = undefined;
+    if (itemsFilters) this.itemsFilters = itemsFilters;
+    this.loadProducts();
+  }
+
+  private loadProducts() {
+    this.itemService
+      .getItems(this.itemsFilters)
+      .pipe(
+        tap((res) => {
+          this.loading = true;
+          this.itemsCount = +res.items_count;
+        }),
+        map((res) => res.result),
+        finalize(() => (this.loading = false))
+      )
+      .subscribe((items) => (this.products = items));
   }
 }

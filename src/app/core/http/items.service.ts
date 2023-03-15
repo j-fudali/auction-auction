@@ -1,12 +1,15 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, map } from 'rxjs/operators';
-import { throwError, Observable, BehaviorSubject } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { throwError, Observable, of } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { ErrorHandlerService } from '../util/error-handler.service';
 import { environment } from 'src/environments/environment';
 import { Item } from 'src/app/shared/interfaces/item/item';
 import { ItemsFilters } from 'src/app/shared/interfaces/item/items-filters';
+import { PaginatedResponse } from 'src/app/shared/interfaces/paginated-response';
+import { ParticularItem } from 'src/app/shared/interfaces/item/particular-item';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -18,21 +21,16 @@ export class ItemsService {
   private errorHandler: ErrorHandlerService = inject(ErrorHandlerService) 
   private http = inject(HttpClient)
   private authService = inject(AuthService)
-
-  private itemCountSubject = new BehaviorSubject<number>(0);
-  public itemsCount$ = this.itemCountSubject.asObservable()
-
-  getItems(itemsFilters?: ItemsFilters): Observable<Item[]>{
+  private router = inject(Router)
+  getItems(itemsFilters?: ItemsFilters): Observable<PaginatedResponse<Item>>{
     let params = new HttpParams()
-    if(itemsFilters && itemsFilters.page) params = params.set("page", itemsFilters.page)
-    if(itemsFilters && itemsFilters.orderBy) params = params.set("order_by", itemsFilters.orderBy)
-    if(itemsFilters && itemsFilters.category) params = params.set("category", itemsFilters.category)
-    if(itemsFilters && itemsFilters.search) params = params.set("search", itemsFilters.search)
-    return this.http.get<{current_page: number, pages: number,items_count: number, result: Item[]}>(this.baseUrl, {params: params}).pipe(
-      map( res => {
-        this.itemCountSubject.next(res.items_count)
-        return res.result
-      }),
+    if(itemsFilters){
+      if(itemsFilters.page) params = params.set("page", itemsFilters.page)
+      if(itemsFilters.orderBy) params = params.set("order_by", itemsFilters.orderBy)
+      if(itemsFilters.category) params = params.set("category", itemsFilters.category)
+      if(itemsFilters.search) params = params.set("search", itemsFilters.search)
+    }
+    return this.http.get<PaginatedResponse<Item>>(this.baseUrl, {params: params}).pipe(
       catchError( (err: HttpErrorResponse) => {
         if(err.status === 400){
           this.errorHandler.showError(err.error.message)
@@ -41,8 +39,7 @@ export class ItemsService {
           this.errorHandler.showError(err.error.details)
         }
         return throwError(err)
-      })
-    )
+      }))
   }
   getRelatedItems(par: string, page?: number): Observable<any>{
     const token = this.authService.getToken();
@@ -53,8 +50,21 @@ export class ItemsService {
     }
     return this.http.get(this.relatedMeItems, {headers: header, params: param})
   }
-  getParticularItem(id: number): Observable<any> {
-    return this.http.get(this.baseUrl + '/' + id);
+  getItemById(id: number): Observable<ParticularItem> {
+    return this.http.get<ParticularItem>(this.baseUrl + '/' + id).pipe(
+      catchError( (err: HttpErrorResponse) => {
+        if(err.status === 400 || err.status === 404){
+          this.errorHandler.showError(err.error.message)
+        }
+        if(err.status === 404){
+          this.router.navigate(['/dashboard/products'])
+        }
+        if(err.status == 422){
+          this.errorHandler.showError(err.error.details)
+        }
+        return throwError(err);
+      })
+    );
   }
 
   createNewItem(name: string, descriptpion: string, category: number, startingPrice: string, endingTime: string): Observable<any>{

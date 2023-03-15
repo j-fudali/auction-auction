@@ -1,15 +1,20 @@
 export interface ParticularItem {
   name: string;
   description: string;
-  id_creator: number;
+  creator: {
+    id_user: string;
+    username: string;
+    avatar: string;
+    last_online: string;
+  }
   category: string;
-  starting_price: number;
-  starting_time: Date;
-  id_winner: number;
-  ending_price: number;
-  ending_time: Date;
+  starting_price: string;
+  starting_time: string;
+  id_winner: string;
+  ending_price: string;
+  ending_time: string;
   is_closed: string;
-  max_bid: number;
-  id_bidder: number;
+  max_bid: string;
+  id_bidder: string;
   images: string[];
 }

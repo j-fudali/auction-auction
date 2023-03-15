@@ -17,11 +17,19 @@ export class UserService {
   private errorHandler: ErrorHandlerService = inject(ErrorHandlerService) 
   private authService: AuthService = inject(AuthService)
 
-  getUserCredentials(){
+  getUserCredentials(): Observable<User>{
     const token = this.authService.getToken();
-    const header = new HttpHeaders().set('Authorization', `JWT${token}`);
-    return this.http.get(this.baseUrl + '/me', {headers: header})
-      // .pipe(catchError((err) => this.handleError(err)))
+    const header = new HttpHeaders().set('Authorization', `JWT ${token}`);
+    return this.http.get<User>(this.baseUrl + '/me', {headers: header})
+      .pipe(catchError((err: HttpErrorResponse) => {
+        if(err.status == 400){
+          this.errorHandler.showError(err.message)
+        }
+        if(err.status == 422){
+          this.errorHandler.showError(err.error.details)
+        }
+        return throwError(err)
+      }))
   }
   getUserById(id: number): Observable<User>{
     const token = this.authService.getToken();
@@ -32,11 +40,11 @@ export class UserService {
     return this.http.post<{message: string}>(this.baseUrl + '/register', newUser)
     .pipe(
       catchError((err: HttpErrorResponse) => {
-        if(err.status === 400){
-          this.errorHandler.showError(err.error.message)
+        if(err.status == 400){
+          this.errorHandler.showError(err.error.details || err.error.message)
         }
         if(err.status == 422){
-          this.errorHandler.showError(err.error.details)
+          this.errorHandler.showError(err.error.details || err.error.message)
         }
         return of(null)
       })
@@ -46,10 +54,10 @@ export class UserService {
     return this.http.post(this.baseUrl + '/activate', {token: token}).pipe(
       catchError( (err: HttpErrorResponse) => {
         if(err.status === 400){
-          this.errorHandler.showError(err.error.message)
+          this.errorHandler.showError(err.error.details || err.error.message)
         }
         if(err.status == 422){
-          this.errorHandler.showError(err.error.details)
+          this.errorHandler.showError(err.error.details || err.error.message)
         }
         return throwError(err)
       })
@@ -60,10 +68,10 @@ export class UserService {
     return this.http.post(this.baseUrl + '/reset_password', {email}).pipe(
       catchError( (err: HttpErrorResponse ) => {
         if(err.status === 400){
-          this.errorHandler.showError(err.error.message)
+          this.errorHandler.showError(err.error.details || err.error.message)
         }
         if(err.status == 422){
-          this.errorHandler.showError(err.error.details)
+          this.errorHandler.showError(err.error.details || err.error.message)
         }
         return throwError(err)
       })
@@ -73,10 +81,10 @@ export class UserService {
     return this.http.post(this.baseUrl + '/reset_password/confirm', {token: token, password: password}).pipe(
       catchError( (err: HttpErrorResponse) => {
         if(err.status === 400){
-          this.errorHandler.showError(err.error.message)
+          this.errorHandler.showError(err.error.details || err.error.message)
         }
         if(err.status == 422){
-          this.errorHandler.showError(err.error.details)
+          this.errorHandler.showError(err.error.details || err.error.message)
         }
         return throwError(err)
       })
@@ -94,10 +102,10 @@ export class UserService {
     return this.http.post<{token: string, refresh_token: string}>(this.baseUrl + '/login', loginData).pipe(
       catchError((err: HttpErrorResponse) => {
         if(err.status == 400){
-          this.errorHandler.showError(err.error.message)
+          this.errorHandler.showError(err.error.details || err.error.message)
         }
         if(err.status == 422){
-          this.errorHandler.showError(err.error.details)
+          this.errorHandler.showError(err.error.details || err.error.message)
         }
         return of(null)
       })

@@ -3,5 +3,12 @@
         <button mat-icon-button (click)="toggleSidenav()"><mat-icon>menu</mat-icon></button>
         <button routerLink="/dashboard" mat-button><h2>Auction Auction</h2></button>
     </div>
-    <button (click)="logout()" mat-button><h4>Log-out</h4></button>
+    <button *ngIf="isAuthenticated; else noAuthencticated" (click)="logout()" mat-stroked-button><h4>Log-out</h4></button>
+    <ng-template #noAuthencticated>
+        <mat-button-toggle-group>
+            <mat-button-toggle  routerLink="/home/login">Log-in</mat-button-toggle>
+            <mat-button-toggle routerLink="/home/sign-in">Sign-in</mat-button-toggle>
+        </mat-button-toggle-group>
+        
+    </ng-template>
 </mat-toolbar>

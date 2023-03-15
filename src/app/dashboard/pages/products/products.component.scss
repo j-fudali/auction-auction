@@ -1,4 +1,6 @@
-
+.container{
+    min-height: 100vh;
+}
 .spinner-wrapper{
     background-color: #fff;
     width: 100%;
@@ -8,6 +10,17 @@
     justify-content: center;
     align-items: center;
 }
-.container{
-    margin: 0 50px;
+.actions-buttons{
+    margin: 5px 16px 5px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+    div{
+        display: flex;
+        align-items: center;
+    }
+}
+h2{
+    text-align: center;
 }

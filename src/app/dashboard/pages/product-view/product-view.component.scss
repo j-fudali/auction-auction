@@ -1,0 +1,131 @@
+.container{
+    min-height: 100vh;
+    display: flex;
+    gap: 5px;
+}
+.container.gt-and-higher{
+    padding: 10px 150px;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.container.lt-gt{
+    padding: 10px 50px;
+    flex-direction: column;
+}
+p{
+    line-break: anywhere;
+}
+.title-section, .bottom-section {
+    background-color: rgba(0,0,0,0.05);
+    &:hover{
+        transition: 200ms ease-out;
+        background-color: rgba(0,0,0,0.10);
+    }
+}
+
+.title-section{
+    padding: 10px;
+    order: 2;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    div{
+        h2{
+            font-size: 36px;
+        }
+    }
+}
+
+.slider-panel.lt-gt{
+}
+.slider-panel.gt-and-higher{
+    flex: 1;
+}
+.slider-panel{
+    height: 60vh;
+    order: 1;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+    overflow: hidden;
+    button{
+        position: absolute;
+        top: 50%;
+        z-index: 2;
+        &:first-child{
+            left: 10px;
+        }
+        &:last-child{
+            right: 10px;
+        }
+    }
+}
+.slider{
+    transition: 200ms ease-in-out;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+.image-wrapper{
+    position: relative;
+    min-width: 100%;
+    height: 100%;
+    &:hover{
+        cursor: pointer;
+    }
+}
+.image-wrapper.no-images{
+    cursor: default;
+}
+.bottom-section{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    order: 3;
+    padding: 10px;
+}
+.bottom-section.lt-gt{
+    flex: 60%;
+}
+.bottom-section.gt-and-higher{
+    flex: 100%;
+}
+.bottom-section-middle{
+    display: flex;
+}
+.bottom-section-middle.lt-gt{
+    flex-direction: column;
+    justify-content: start;
+}
+.bottom-section-middle.gt-and-higher{
+    justify-content: space-between;
+}
+.creator{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .image-wrapper-creator{
+        min-height: 10vh;
+        min-width: 10vw;
+        position: relative;
+        img {
+            object-fit: contain;
+        }
+    }
+}
+.bid-status{
+    position: fixed;
+    z-index: 3;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    top: calc(10vh + 5px);
+    right: 10px;
+}

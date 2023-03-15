@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatButtonModule } from "@angular/material/button";
@@ -7,6 +7,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
 
 @Component({
   selector: "app-header",
@@ -20,11 +21,14 @@ import { FormControl, ReactiveFormsModule } from "@angular/forms";
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
+    MatButtonToggleModule
+
   ],
   templateUrl: "./header.component.html",
   styleUrls: ["./header.component.scss"],
 })
-export class HeaderComponent {
+export class HeaderComponent{
+  @Input() isAuthenticated: boolean;
   @Output() toggleSidenavMenu = new EventEmitter<void>();
   @Output() logoutEvent = new EventEmitter<void>();
   search = new FormControl("");

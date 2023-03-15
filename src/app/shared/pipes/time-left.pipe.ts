@@ -10,7 +10,7 @@ import { map } from "rxjs/operators";
 export class TimeLeftPipe implements PipeTransform {
   transform(value: string, ...args: unknown[]): Observable<string> {
     const endingTime = DateTime.fromFormat(value, 'yyyy-MM-dd hh:mm:ss', {zone: 'utc'}).toLocal();
-    return timer(1000, 1000).pipe(
+    return timer(0, 1000).pipe(
       map(() => {
         const difference = endingTime.diff(DateTime.now().toLocal())
         .shiftTo("days", "hours", "minutes", "seconds")
