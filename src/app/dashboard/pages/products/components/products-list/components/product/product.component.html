@@ -19,7 +19,7 @@
                         <button  mat-fab (click)="bid()"><mat-icon>add_shopping_cart</mat-icon></button>
                     </ng-template>
                 </ng-container>
-                <h4>Actual price: {{product.max_bid || product.starting_price}}</h4>
+                <h4>Actual price: {{product.max_bid || product.starting_price | number:'1.2'}}</h4>
             </div>
         </div>
         <div class="details">

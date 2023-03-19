@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,10 +16,11 @@ import { Category } from 'src/app/shared/interfaces/category/category';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, MatIconModule],
   templateUrl: './filters-panel.component.html',
-  styleUrls: ['./filters-panel.component.scss']
+  styleUrls: ['./filters-panel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FiltersPanelComponent {
-  @Input() categories: Category[] | null;
+  @Input() categories: Category[];
   @Output() onFilterProducts = new EventEmitter<ItemsFilters>()
   @Output() onClose = new EventEmitter<void>()
   private breakpoints = inject(BreakpointObserver)

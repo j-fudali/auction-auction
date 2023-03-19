@@ -48,7 +48,7 @@ export class ProductViewComponent implements OnInit {
   private breakpoints = inject(BreakpointObserver);
   private bidService = inject(BidService)
   private bidModal = inject(ProductsService);
-  userId: string | null;
+  userId: number | null;
 
   isLtGt$ = this.breakpoints
     .observe([Breakpoints.XSmall, Breakpoints.Small])
@@ -62,6 +62,7 @@ export class ProductViewComponent implements OnInit {
 
   ngOnInit(): void {
     this.product = this.route.snapshot.data.product
+    this.productId = +this.route.snapshot.paramMap.get('id')!;
     this.userId = this.route.snapshot.data.userId
   }
   bid() {
@@ -73,14 +74,16 @@ export class ProductViewComponent implements OnInit {
       .afterClosed()
       .pipe(
         tap((bidPrice) => (this.product!.max_bid = bidPrice)),
-        switchMap((bidPrice) => {
+        switchMap((bidPrice: number) => {
           if (bidPrice && this.userId) {
             this.product!.max_bid = bidPrice;
             this.product!.id_bidder = this.userId
+            console.log(bidPrice)
+            console.log(this.product)
             return this.bidService.bid(this.productId, bidPrice);
           }
           return of(null);
-        })
+        }),
       )
       .subscribe();
   }

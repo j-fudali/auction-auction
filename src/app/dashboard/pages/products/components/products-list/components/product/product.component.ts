@@ -12,7 +12,7 @@ import { CommonModule, NgOptimizedImage } from "@angular/common";
 import { Item } from "src/app/shared/interfaces/item/item";
 import { MatCardModule } from "@angular/material/card";
 import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
-import { map, switchMap, tap } from "rxjs/operators";
+import { catchError, map, switchMap, tap } from "rxjs/operators";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterModule } from "@angular/router";
@@ -37,6 +37,7 @@ import { MatChipsModule } from "@angular/material/chips";
   ],
   templateUrl: "./product.component.html",
   styleUrls: ["./product.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductComponent implements OnInit{
   @Input() product: Item;
@@ -44,7 +45,7 @@ export class ProductComponent implements OnInit{
   private productsService = inject(ProductsService);
   private breakpoints = inject(BreakpointObserver);
   private authService = inject(AuthService);
-  userId: string | null;
+  userId: number | null;
   bidPrice: number;
   isLtMd$ = this.breakpoints
     .observe([Breakpoints.XSmall, Breakpoints.Small])
@@ -71,7 +72,7 @@ export class ProductComponent implements OnInit{
           return of(null);
         }),
         tap((r) =>
-          r ? (this.product.max_bid = this.bidPrice.toString()) : null
+          r ? (this.product.max_bid = this.bidPrice) : null
         )
       )
       .subscribe();

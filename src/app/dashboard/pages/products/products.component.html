@@ -1,11 +1,11 @@
 <mat-drawer-container class="container" *ngIf="isLtMd$ | async as isLtMd"
     [style.margin]="isLtMd.matches ? '25px 10px 0 10px' : '25px 50px 0 50px'">
     <mat-drawer #drawer class="sidenav" [opened]="!isLtMd.matches" [mode]="isLtMd.matches ? 'over' : 'side'">
-        <app-filters-panel [categories]="categories$ | async" (onClose)="drawer.close()" (onFilterProducts)="filterProducts($event)"></app-filters-panel>
+        <app-filters-panel [categories]="categories" (onClose)="drawer.close()" (onFilterProducts)="filterProducts($event)"></app-filters-panel>
     </mat-drawer>
     <mat-drawer-content class="content">
         <div class="spinner-wrapper" *ngIf="loading">
-            <mat-spinner color="accent"></mat-spinner>
+            <mat-spinner color="warn"></mat-spinner>
         </div>
         <div class="actions-buttons">
             <div>

@@ -30,7 +30,7 @@ import { MatIconModule } from '@angular/material/icon';
         </mat-form-field>
         <mat-form-field>
           <mat-label>Description</mat-label>
-          <input matInput formControlName="description">
+          <textarea matInput formControlName="description"></textarea>
           <mat-error *ngIf="description?.hasError('required')"><small>Required field</small></mat-error>
           <mat-error *ngIf="description?.hasError('maxLength')"><small>Max. 500 characters</small></mat-error>
         </mat-form-field>
@@ -38,7 +38,7 @@ import { MatIconModule } from '@angular/material/icon';
           <mat-label>Category</mat-label>
           <mat-select formControlName="category">
             <mat-option>None</mat-option>
-            <mat-option [value]="category.id_category" *ngFor="let category of data.categories$ | async">{{category.name}}</mat-option>
+            <mat-option [value]="category.id_category" *ngFor="let category of data.categories">{{category.name}}</mat-option>
             <mat-error *ngIf="category?.hasError('required')"><small>Required field</small></mat-error>
           </mat-select>
         </mat-form-field>
@@ -51,7 +51,7 @@ import { MatIconModule } from '@angular/material/icon';
         <mat-form-field>
           <mat-label>End of auction</mat-label>
           <mat-datepicker #datepicker></mat-datepicker>
-          <mat-datepicker-toggle *matIconSuffix [for]=datepicker></mat-datepicker-toggle>
+          <mat-datepicker-toggle matIconSuffix [for]=datepicker></mat-datepicker-toggle>
           <input matInput [min]="today" [matDatepicker]="datepicker" formControlName="endingTime">
           <mat-error *ngIf="endingTime?.hasError('required')"><small>Required field</small></mat-error>
         </mat-form-field>
@@ -68,7 +68,7 @@ import { MatIconModule } from '@angular/material/icon';
         <mat-list class="files-list" *ngIf="images.length > 0">
           <div mat-list-item *ngFor="let i of images"><span>{{i.name}}</span><button (click)="remove(i)" mat-icon-button ><mat-icon>remove</mat-icon></button></div>
         </mat-list>
-        <button mat-stroked-button [disabled]="newAuctionForm.invalid" [mat-dialog-close]="newAuctionForm.value">Create!</button>
+        <button mat-stroked-button [disabled]="newAuctionForm.invalid" [mat-dialog-close]="{data: newAuctionForm.value, images: images}">Create!</button>
       </form>
     </div>
   </div>
@@ -107,7 +107,7 @@ import { MatIconModule } from '@angular/material/icon';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateAuctionModalComponent {
-  public data: {categories$: Observable<Category[]>} = inject(MAT_DIALOG_DATA)
+  public data: {categories: Category[]} = inject(MAT_DIALOG_DATA)
   private fb = inject(FormBuilder)
   newAuctionForm = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.maxLength(100)]],
@@ -135,12 +135,9 @@ export class CreateAuctionModalComponent {
   }
 
   remove(image: File){
-   const images = this.images as File[]
-   console.log(images)
-   this.images = images.filter( i => i.name == image.name)
+   this.images = this.images.filter( i => i !== image)
   }
   onImagesChange(event: any){
-    const files = event.target.files as File[]
-    this.images = files
+    this.images = Array.from(event.target.files)
   }
 }

@@ -4,7 +4,7 @@
             <button *ngIf="product.images.length > 1 && product.images[0] != ''" color="primary" (click)="previous()" mat-mini-fab><mat-icon>arrow_left</mat-icon></button>
             <div class="slider" [style.transform]="'translateX(' + translateX + '%)'"> 
                 <ng-container *ngIf="product.images.length > 0 && product.images[0] != ''; else noImages">
-                    <div [matTooltip]="!isZoomed ? 'Click to see all of the image' : ''" (click)="isZoomed = !isZoomed"  *ngFor="let img of product.images" class="image-wrapper">
+                    <div [matTooltip]="!isZoomed ? 'Click to see full of image' : ''" (click)="isZoomed = !isZoomed"  *ngFor="let img of product.images" class="image-wrapper">
                         <img [style.objectFit]="isZoomed ? 'contain' : 'cover'" [ngSrc]="img" fill priority>
                     </div>
                 </ng-container>
@@ -46,10 +46,10 @@
         </section>
     </div>
     <mat-card  class="bid-status">
-        <ng-container *ngIf="!(+product.is_closed); else closed">
-            <h4 mat-card-title>Actual price: {{product.max_bid || product.starting_price}}</h4>
+        <ng-container *ngIf="product.is_closed === 0; else closed">
+            <h4 mat-card-title>Actual price: {{product.max_bid || product.starting_price | number:'1.2'}}</h4>
             <mat-card-content>
-                <ng-container *ngIf="product.is_closed; else closed">
+                <ng-container *ngIf="product.is_closed === 0; else closed">
                     <h5>Time left: {{product.ending_time | timeLeft | async}}</h5>
                 </ng-container>
                 <ng-template #closed>

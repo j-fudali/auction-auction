@@ -54,7 +54,7 @@ import { MatButtonModule } from "@angular/material/button";
 })
 export class BidModalComponent  {
   data: { idItem: number; price: number } = inject(MAT_DIALOG_DATA);
-  minBidPriceAllowed = this.data.price+0.01
+  minBidPriceAllowed = Math.round((this.data.price+0.01)*100) / 100
   price = new FormControl<number>(this.minBidPriceAllowed, {
     nonNullable: true,
     validators: [

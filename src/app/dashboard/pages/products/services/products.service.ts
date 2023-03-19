@@ -7,11 +7,11 @@ import { BidModalComponent } from '../components/bid-modal/bid-modal.component';
 })
 export class ProductsService {
   private modal = inject(MatDialog)
-  openBidModal(idItem: number, price: string): MatDialogRef<BidModalComponent> {
+  openBidModal(idItem: number, price: number): MatDialogRef<BidModalComponent> {
     return this.modal.open(BidModalComponent, {
       data: {
         idItem,
-        price: +price
+        price: price
       },
       maxHeight: 300,
       maxWidth: 300      

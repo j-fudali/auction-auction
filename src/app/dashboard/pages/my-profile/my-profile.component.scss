@@ -1,0 +1,17 @@
+.container{
+    min-height: 90vh;
+}
+mat-card-title{
+    font-size: 24px;
+    font-weight: bold;
+}
+form{
+    display: flex;
+    flex-direction: column;
+}
+.actions-buttons{
+
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}

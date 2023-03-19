@@ -1,0 +1,53 @@
+<ng-container *ngIf="{isLtMd: (isLtMd$ | async)} as bp">
+    <div class="container" [style.flexDirection]="bp.isLtMd ? 'column': 'row'"
+        [style.padding]="bp.isLtMd ? '10px 50px' : '10px 250px'">
+        <mat-card>
+            <mat-card-header>
+                <img mat-card-avatar [src]="userData.avatar!">
+                <mat-card-title>{{userData.username}}</mat-card-title>
+                <mat-card-subtitle>{{userData.first_name}} {{userData.last_name}}</mat-card-subtitle>
+                <mat-card-subtitle>{{userData.email}}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+                    <mat-form-field>
+                        <mat-label>Phone</mat-label>
+                        <input matInput type="text" formControlName="phone">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Country</mat-label>
+                        <mat-select formControlName="country">
+                            <mat-option [value]="c.id_country" *ngFor="let c of countries">{{c.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Province</mat-label>
+                        <mat-select formControlName="province">
+                            <mat-option [value]="p.id_province" *ngFor="let p of provinces">{{p.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Postcode</mat-label>
+                        <input matInput type="text" formControlName="postcode">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>City</mat-label>
+                        <input matInput type="text" formControlName="city">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Street</mat-label>
+                        <input matInput type="text" formControlName="street">
+                    </mat-form-field>
+                    <button mat-stroked-button type="button" (click)="toggleUpdate()"
+                        *ngIf="profileForm.disabled; else onUpdate">Update</button>
+                    <ng-template #onUpdate>
+                        <div class="actions-buttons">
+                            <button mat-stroked-button type="submit">Submit</button>
+                            <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
+                        </div>
+                    </ng-template>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</ng-container>

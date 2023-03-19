@@ -2,8 +2,7 @@
     <mat-sidenav  [mode]="media.isLtMd ? 'over' : 'side'" #sidenav>
         <button (click)="sidenav.close()" mat-icon-button><mat-icon>close</mat-icon></button>
         <mat-nav-list>
-            <a mat-list-item routerLink="">Profile</a>
-            <a mat-list-item routerLink="">My products</a>
+            <a  (click)="sidenav.close()" *ngFor="let link of links" [routerLink]="[link.path]" mat-list-item [activated]="link.isActive">{{link.name}}</a>
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>

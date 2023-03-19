@@ -10,6 +10,7 @@ import { ItemsFilters } from 'src/app/shared/interfaces/item/items-filters';
 import { PaginatedResponse } from 'src/app/shared/interfaces/paginated-response';
 import { ParticularItem } from 'src/app/shared/interfaces/item/particular-item';
 import { Router } from '@angular/router';
+import { NewItem } from 'src/app/shared/interfaces/item/new-item';
 
 @Injectable({
   providedIn: 'root'
@@ -67,17 +68,14 @@ export class ItemsService {
     );
   }
 
-  createNewItem(name: string, descriptpion: string, category: number, startingPrice: string, endingTime: string): Observable<any>{
+  createNewItem(newItem: NewItem){
     const token = this.authService.getToken();
     const header = new HttpHeaders().set('Authorization', `JWT${token}`);
-    return this.http.post(this.baseUrl, {
-      name: name,
-      description: descriptpion,
-      id_category: category,
-      starting_price: startingPrice,
-      ending_time: endingTime
-    },
-    {headers: header})
+    return this.http.post<{message: string, id_item: number}>(this.baseUrl, 
+      {name: newItem.name, description: newItem.description, id_category: newItem.category, starting_price: newItem.startingPrice,
+        ending_time: newItem.endingTime
+      }, 
+      {headers: header})
   }
   addImagesToItem(idItem: number, image: File, isMain: string){
     const token = this.authService.getToken();
@@ -86,7 +84,7 @@ export class ItemsService {
     formdata.append('id_item', `${idItem}`);
     formdata.append('is_main', `${isMain}`);
     formdata.append('image', image);
-
-    return this.http.post(this.itemImagesUrl, formdata, {headers: header})
+    console.log(formdata)
+    return this.http.post<{message: string}>(this.itemImagesUrl, formdata, {headers: header})
   }
 }

@@ -9,10 +9,14 @@ import { CommonModule } from '@angular/common';
     <footer><h2>Auction Auction</h2></footer>
   `,
   styles: [`
+  @use '../../../../styles' as styles;
     footer{
       display: flex;
       flex-direction: column;
       align-items: center;
+      height: 10vh;
+      background-color: styles.$primary-600;
+      color: #fff;
     }
   `
   ]

@@ -9,6 +9,6 @@ export class ErrorHandlerService {
   private snackbarService: MatSnackBar = inject(MatSnackBar)
 
   showError(notification: string){
-    this.snackbarService.open(notification, 'X', {duration: 10000});
+    this.snackbarService.open(notification, 'X', {duration: 5000});
   }
 }

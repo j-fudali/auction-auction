@@ -12,8 +12,8 @@ import { MatSidenavModule } from "@angular/material/sidenav";
 import { FiltersPanelComponent } from "./components/filters-panel/filters-panel.component";
 import { MatPaginatorModule, PageEvent } from "@angular/material/paginator";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { catchError, filter, finalize, map, take, takeUntil, tap } from "rxjs/operators";
-import { Observable, of, Subscription, throwError } from "rxjs";
+import { catchError, filter, finalize, map, switchMap, take, takeUntil, tap } from "rxjs/operators";
+import { forkJoin, Observable, of, Subscription, throwError } from "rxjs";
 import { ItemsFilters } from "src/app/shared/interfaces/item/items-filters";
 import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 import { MatButtonModule } from "@angular/material/button";
@@ -27,6 +27,8 @@ import { Category } from "src/app/shared/interfaces/category/category";
 import { UserService } from "src/app/core/http/user.service";
 import { MatDialog } from "@angular/material/dialog";
 import { CreateAuctionModalComponent } from "./components/create-auction-modal/create-auction-modal.component";
+import { NewItem } from "src/app/shared/interfaces/item/new-item";
+import { DateTime } from "luxon";
 
 
 @Component({
@@ -50,6 +52,7 @@ export class ProductsComponent implements OnInit {
   private categoriesService = inject(CategoriesService);
   private authService = inject(AuthService)
   private route = inject(ActivatedRoute)
+  private router = inject(Router)
   private dialog = inject(MatDialog)
   isLtMd$ = this.breakpoints.observe([Breakpoints.XSmall, Breakpoints.Small]);
 
@@ -57,7 +60,7 @@ export class ProductsComponent implements OnInit {
   isAuthenticated: boolean = false
   products: Item[];
 
-  categories$: Observable<Category[]>;
+  categories: Category[];
   loading: boolean;
   itemsCount: number;
 
@@ -69,16 +72,34 @@ export class ProductsComponent implements OnInit {
     this.isAuthenticated = this.authService.isAuthenticated()
     this.itemsCount = +this.route.snapshot.data.products.items_count
     this.products = this.route.snapshot.data.products.result
-    this.categories$ = this.categoriesService.getCategories();
+    this.categoriesService.getCategories()
+    .pipe(tap((categories) => this.categories = categories))
+    .subscribe()
   }
 
   createAuction(){
     const dialogRef = this.dialog.open(CreateAuctionModalComponent, {
       data: {
-        categories$: this.categories$,
+        categories: this.categories,
       },
+      minWidth: '30vw'
     })
-    dialogRef.afterClosed().subscribe(console.log)  
+    dialogRef.afterClosed().pipe(
+      switchMap((res) => {
+        if(!res) return of(null)
+        res.data.endingTime = (res.data.endingTime as DateTime).toUTC().toFormat('dd.MM.yyyy hh:mm:ss')
+        return this.itemService.createNewItem(res.data).pipe(
+          map((newItemRes) => { return {id_item: newItemRes.id_item, images: res.images}})
+        )
+      }),
+      switchMap( (res) => {
+        if(!res?.id_item || !res.images) return of(null)
+        const mainImage = this.itemService.addImagesToItem(res.id_item, res.images.shift(), 'True')
+        return forkJoin([mainImage, ...res.images.map( (i: File) => this.itemService.addImagesToItem(res.id_item, i, 'False'))])
+          .pipe(map(() => {return {id_item: res.id_item}}))
+      }),
+      tap((res) => res ? this.router.navigate(['/dashboard/products', res.id_item]) : null))
+    .subscribe()  
   }
 
   onPageChange(page: PageEvent) {
@@ -100,16 +121,15 @@ export class ProductsComponent implements OnInit {
   }
 
   private loadProducts() {
+    this.loading = true;
     this.itemService
       .getItems(this.itemsFilters)
       .pipe(
         tap((res) => {
-          this.loading = true;
           this.itemsCount = +res.items_count;
         }),
         map((res) => res.result),
-        finalize(() => (this.loading = false))
       )
-      .subscribe((items) => (this.products = items));
+      .subscribe((items) => {this.loading = false;this.products = items});
   }
 }

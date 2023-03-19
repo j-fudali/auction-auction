@@ -3,16 +3,16 @@ export interface Item {
   name: string;
   description: string;
   creator: {
-    id_user: string;
+    id_user: number;
     username: string;
     avatar: string;
   }
   category: string;
-  starting_price: string;
+  starting_price: number;
   starting_time: string;
-  ending_price: string;
+  ending_price: number;
   ending_time: string;
-  max_bid: string;
-  id_bidder: string;
+  max_bid: number;
+  id_bidder: number;
   image: string;
 }

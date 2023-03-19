@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { NewUser } from 'src/app/shared/interfaces/user/new-user';
+import { UpdateCredentials } from 'src/app/shared/interfaces/user/update-credentials';
 import { User } from 'src/app/shared/interfaces/user/user';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../auth/auth.service';
@@ -111,17 +112,20 @@ export class UserService {
       })
     )
   }
-  editCredentials(cred: any){
+  editCredentials(credentials: UpdateCredentials){
     const token = this.authService.getToken();
     const header = new HttpHeaders().set('Authorization', `JWT${token}`);
-    return this.http.patch(this.baseUrl + '/me', {
-      phone: cred?.phone,
-      id_country: cred?.id_country,
-      id_province: cred?.id_province,
-      postcode: cred?.postcode,
-      city: cred?.city,
-      street: cred?.street
-    }, {headers: header}).pipe()
+    return this.http.patch(this.baseUrl + '/me', credentials, {headers: header}).pipe(
+      catchError((err: HttpErrorResponse) => {
+        if(err.status === 400){
+          this.errorHandler.showError('Bad data provided')
+        }
+        if(err.status === 422){
+          this.errorHandler.showError('Coutry or province are not existed')
+        }
+        return of(null)
+      })
+    )
   }
 
   changePassword(oldPassword: string, newPassword: string){

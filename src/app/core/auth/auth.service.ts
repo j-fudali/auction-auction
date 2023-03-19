@@ -9,12 +9,12 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class AuthService {
   private cookies: CookieService = inject(CookieService)
   private router: Router = inject(Router)
-  private userIdSubject = new BehaviorSubject<string>('');
-  userId$: Observable<string> = this.userIdSubject.asObservable()
-  setUserId(id: string){
+  private userIdSubject = new BehaviorSubject<number>(0);
+  userId$: Observable<number> = this.userIdSubject.asObservable()
+  setUserId(id: number){
     this.userIdSubject.next(id);
   }
-  getUserId(): string | null {
+  getUserId(): number | null {
     return this.userIdSubject.getValue() || null;
   }
   isAuthenticated() {
