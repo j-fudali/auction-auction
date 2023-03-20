@@ -1,3 +1,48 @@
-<div class="container">
-    
-</div>
+<mat-drawer-container [style.margin]="bp.isLtMd ? '0 10px' : '10px 50px'" *ngIf="{isLtMd: (isLtMd$ | async)} as bp">
+    <mat-drawer #drawer [opened]="!bp.isLtMd" [mode]="bp.isLtMd ? 'over' : 'side'">
+        <app-filters-panel (onClose)="drawer.close()" (onFilterProducts)="filter($event)"></app-filters-panel>
+    </mat-drawer>
+    <mat-drawer-content>
+        <button *ngIf="bp.isLtMd" class="filters-button" (click)="drawer.toggle()" mat-icon-button><mat-icon>filter_list</mat-icon></button>
+        <div class="container">
+            <div class="spinner-wrapper" *ngIf="isLoading">
+                <mat-spinner color="accent"></mat-spinner>
+            </div>
+            <mat-tab-group dynamicHeight animationDuration="0ms" class="group" (selectedTabChange)="onTabChange($event)">
+                <mat-tab label="Created">
+                    <ng-container [ngTemplateOutlet]="content"></ng-container>
+                </mat-tab>
+                <mat-tab  label="Participated">
+                    <ng-container [ngTemplateOutlet]="content"></ng-container>
+                </mat-tab>
+                <mat-tab label="Ended">
+                    <ng-container [ngTemplateOutlet]="content"></ng-container>
+                </mat-tab>
+                <mat-tab  label="Won">
+                    <ng-container [ngTemplateOutlet]="content"></ng-container>
+                </mat-tab>
+            </mat-tab-group>
+            <ng-template  #content matTabContent>
+                <ng-container *ngIf="products && products.length > 0; else noProducts">
+                    <mat-list>
+                        <mat-list-item [routerLink]="['../products', p.id_item]" class="item" *ngFor="let p of products">
+                            <span class="title" matListItemTitle>{{p.name}}</span>
+                            <span class="category" matListItemLine>{{p.category}}</span>
+                            <img matListItemAvatar [src]="p.image || '../../../assets/noimage.jpg'">
+                            <span matListItemLine>{{p.description | slice:0:50}}</span>
+                            <span matListItemLine>{{p.ending_time | timeLeft | async}}</span>
+                            <span class="actual-price" matListItemLine>Actual price: {{p.max_bid || p.starting_price | number:'1.2'}}</span>
+                            <div  matListItemMeta>
+                                <a mat-icon-button [routerLink]="['../products', p.id_item]"><mat-icon>arrow_forward</mat-icon></a>
+                            </div>
+                        </mat-list-item>
+                    </mat-list>
+                    <mat-paginator hidePageSize (page)="onPageChange($event)" [pageSize]="5" [length]="length"></mat-paginator>
+                </ng-container>
+                <ng-template #noProducts>
+                    <h2>No products found with selected preferences</h2>
+                </ng-template>
+            </ng-template>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>

@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 import { ErrorHandlerService } from '../util/error-handler.service';
 
 @Injectable({
-  providedIn: 'any'
+  providedIn: 'root'
 })
 export class CountryService {
   private baseUrl: string = environment.url + '/countries'

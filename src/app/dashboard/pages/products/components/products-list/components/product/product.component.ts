@@ -22,6 +22,7 @@ import { TimeLeftPipe } from "src/app/shared/pipes/time-left.pipe";
 import { Observable, of } from "rxjs";
 import { AuthService } from "src/app/core/auth/auth.service";
 import { MatChipsModule } from "@angular/material/chips";
+import { MatTooltip, MatTooltipModule } from "@angular/material/tooltip";
 
 @Component({
   selector: "app-product",
@@ -33,7 +34,8 @@ import { MatChipsModule } from "@angular/material/chips";
     MatIconModule,
     RouterModule,
     TimeLeftPipe,
-    MatChipsModule
+    MatChipsModule,
+    MatTooltipModule
   ],
   templateUrl: "./product.component.html",
   styleUrls: ["./product.component.scss"],

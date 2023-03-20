@@ -1,5 +1,5 @@
 <div class="container" *ngIf="{isLtMd: (isLtMd$ | async)} as bp">
-    <div class="image-wrapper" [ngClass]="bp.isLtMd? 'image-wrapper-lt-md' : 'image-wrapper-md-higher'">
+    <div class="image-wrapper">
         <img  [ngSrc]="product.image || '../../../../assets/noimage.jpg'" priority fill>
     </div>
     <div class="content">
@@ -16,7 +16,7 @@
                         </ng-container>
                     </ng-template>
                     <ng-template #canBid>
-                        <button  mat-fab (click)="bid()"><mat-icon>add_shopping_cart</mat-icon></button>
+                        <button matTooltip="Bid product" mat-icon-button (click)="bid()"><mat-icon>add_shopping_cart</mat-icon></button>
                     </ng-template>
                 </ng-container>
                 <h4>Actual price: {{product.max_bid || product.starting_price | number:'1.2'}}</h4>

@@ -1,0 +1,18 @@
+.content{
+    min-height: 100vh;
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+mat-drawer{
+    button{
+        margin: 10px 0 0 10px;
+    }
+}
+.filters-button{
+    align-self: flex-start;
+}
+h2{
+    text-align: center;
+}

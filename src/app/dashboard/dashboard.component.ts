@@ -34,12 +34,14 @@ export class DashboardComponent implements OnInit, OnDestroy{
   private sub: Subscription | undefined;
   links = [
     {name: 'My profile', path: 'my-profile', isActive: false},
-    {name: 'My products', path: 'my-products', isActive: false}
+    {name: 'My products', path: 'my-products', isActive: false},
+    {name: 'Discussions', path: 'discussions', isActive: false}
   ]
   isAuthenticated = this.authService.isAuthenticated();
   isLtMd$ = inject(BreakpointObserver)
     .observe([Breakpoints.XSmall, Breakpoints.Small])
     .pipe(map((val) => val.matches));
+    
   ngOnInit(): void {
     this.setActive(this.splitPath(this.router.url))
     this.sub = this.router.events

@@ -75,3 +75,21 @@ mat-error{
   display: flex !important;
   align-items: center !important;
 }
+.spinner-wrapper{
+  background-color: #fff;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  mat-spinner{
+      margin-top: 100px;
+  }
+}
+.filters-button{
+  margin: 5px 16px 5px 16px;
+}

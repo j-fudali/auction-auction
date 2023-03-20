@@ -1,0 +1,19 @@
+:host{
+    width: 80%;
+}
+mat-list{
+    height: 70vh;
+    overflow: scroll;
+}
+mat-list-item{
+    max-width: 50%;
+    margin-bottom: 5px;
+    border: 1px solid #8a89898b;
+    p{
+        white-space: pre-wrap;
+    }
+}
+mat-card-footer{
+    margin-top: 10px;
+    padding: 0 10px;
+}

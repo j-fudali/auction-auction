@@ -10,6 +10,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { map } from 'rxjs/operators';
 import { MatIconModule } from '@angular/material/icon';
 import { Category } from 'src/app/shared/interfaces/category/category';
+import { CategoriesService } from 'src/app/core/http/categories.service';
 
 @Component({
   selector: 'app-filters-panel',
@@ -20,12 +21,12 @@ import { Category } from 'src/app/shared/interfaces/category/category';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FiltersPanelComponent {
-  @Input() categories: Category[];
   @Output() onFilterProducts = new EventEmitter<ItemsFilters>()
   @Output() onClose = new EventEmitter<void>()
   private breakpoints = inject(BreakpointObserver)
   private fb = inject(FormBuilder);
-  
+  private categoriesSerivce = inject(CategoriesService)
+  categories$ = this.categoriesSerivce.getCategories();
   isLtMd$ = this.breakpoints.observe([Breakpoints.XSmall, Breakpoints.Small]).pipe(map( v => v.matches));
   filtersForm = this.fb.group({
     search: [''],

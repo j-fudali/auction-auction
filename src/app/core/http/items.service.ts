@@ -42,15 +42,6 @@ export class ItemsService {
         return throwError(err)
       }))
   }
-  getRelatedItems(par: string, page?: number): Observable<any>{
-    const token = this.authService.getToken();
-    const header = new HttpHeaders().set('Authorization', `JWT${token}`);
-    let param = new HttpParams().set('type', par);
-    if(page){
-      param = param.set('page', page);
-    }
-    return this.http.get(this.relatedMeItems, {headers: header, params: param})
-  }
   getItemById(id: number): Observable<ParticularItem> {
     return this.http.get<ParticularItem>(this.baseUrl + '/' + id).pipe(
       catchError( (err: HttpErrorResponse) => {
@@ -67,7 +58,6 @@ export class ItemsService {
       })
     );
   }
-
   createNewItem(newItem: NewItem){
     const token = this.authService.getToken();
     const header = new HttpHeaders().set('Authorization', `JWT${token}`);

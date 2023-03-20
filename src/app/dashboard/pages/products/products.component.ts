@@ -9,7 +9,7 @@ import {
 import { CommonModule } from "@angular/common";
 import { ItemsService } from "src/app/core/http/items.service";
 import { MatSidenavModule } from "@angular/material/sidenav";
-import { FiltersPanelComponent } from "./components/filters-panel/filters-panel.component";
+import { FiltersPanelComponent } from "../../../shared/components/filters-panel/filters-panel.component";
 import { MatPaginatorModule, PageEvent } from "@angular/material/paginator";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { catchError, filter, finalize, map, switchMap, take, takeUntil, tap } from "rxjs/operators";
@@ -29,6 +29,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { CreateAuctionModalComponent } from "./components/create-auction-modal/create-auction-modal.component";
 import { NewItem } from "src/app/shared/interfaces/item/new-item";
 import { DateTime } from "luxon";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 
 @Component({
@@ -42,6 +43,7 @@ import { DateTime } from "luxon";
     MatIconModule,
     ProductsListComponent,
     MatPaginatorModule,
+    MatTooltipModule
   ],
   templateUrl: "./products.component.html",
   styleUrls: ["./products.component.scss"],

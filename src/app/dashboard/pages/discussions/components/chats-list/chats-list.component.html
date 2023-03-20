@@ -1,0 +1,9 @@
+<mat-list>
+    <mat-list-item (click)="onDiscussionSelect(d.id_discussion)" *ngFor="let d of discussions"> 
+        <img *ngIf="d.item.image" [src]="d.item.image">
+        <span matListItemTitle>{{d.item.name}}</span>
+        <span matListItemLine>{{d.item.creator_username}}</span>
+        <span matListItemLine><small><i>{{d.created_at + 'Z' | date}}</i></small></span>
+        <span matListItemMeta>{{d.is_read === 0 ? 'Not read':'Read'}}</span>
+    </mat-list-item>
+</mat-list>

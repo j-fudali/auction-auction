@@ -2,6 +2,9 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular
 import { inject, Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Item } from 'src/app/shared/interfaces/item/item';
+import { MyItemsFilters } from 'src/app/shared/interfaces/item/items-filters';
+import { PaginatedResponse } from 'src/app/shared/interfaces/paginated-response';
 import { NewUser } from 'src/app/shared/interfaces/user/new-user';
 import { UpdateCredentials } from 'src/app/shared/interfaces/user/update-credentials';
 import { User } from 'src/app/shared/interfaces/user/user';
@@ -18,7 +21,7 @@ export class UserService {
   private errorHandler: ErrorHandlerService = inject(ErrorHandlerService) 
   private authService: AuthService = inject(AuthService)
 
-  getUserCredentials(): Observable<User>{
+  getUserCredentials(): Observable<User | null>{
     const token = this.authService.getToken();
     const header = new HttpHeaders().set('Authorization', `JWT ${token}`);
     return this.http.get<User>(this.baseUrl + '/me', {headers: header})
@@ -29,7 +32,7 @@ export class UserService {
         if(err.status == 422){
           this.errorHandler.showError(err.error.details)
         }
-        return throwError(err)
+        return of(null)
       }))
   }
   getUserById(id: number): Observable<User>{
@@ -124,6 +127,28 @@ export class UserService {
           this.errorHandler.showError('Coutry or province are not existed')
         }
         return of(null)
+      })
+    )
+  }
+
+  getMyProducts(itemsFilters?: MyItemsFilters): Observable<PaginatedResponse<Item>>{
+    const token = this.authService.getToken();
+    const header = new HttpHeaders().set('Authorization', `JWT ${token}`);
+    let params = new HttpParams()
+    if(itemsFilters){
+      if(itemsFilters.page) params = params.set("page", itemsFilters.page)
+      if(itemsFilters.orderBy) params = params.set("order_by", itemsFilters.orderBy)
+      if(itemsFilters.category) params = params.set("category", itemsFilters.category)
+      if(itemsFilters.search) params = params.set("search", itemsFilters.search)
+      if(itemsFilters.type) params = params.set("type", itemsFilters.type)
+    }
+    return this.http.get<PaginatedResponse<Item>>(this.baseUrl + '/me/items', {params: params, headers: header})
+    .pipe(
+      catchError((err: HttpErrorResponse) => {
+        if(err.status === 422){
+          this.errorHandler.showError('There is no such page of items');
+        }
+        return of({} as PaginatedResponse<Item>);
       })
     )
   }

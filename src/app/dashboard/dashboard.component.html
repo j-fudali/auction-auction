@@ -1,8 +1,8 @@
-<mat-sidenav-container *ngIf="{isLtMd: isLtMd$ | async} as media">
+<mat-sidenav-container  *ngIf="{isLtMd: isLtMd$ | async} as media">
     <mat-sidenav  [mode]="media.isLtMd ? 'over' : 'side'" #sidenav>
         <button (click)="sidenav.close()" mat-icon-button><mat-icon>close</mat-icon></button>
         <mat-nav-list>
-            <a  (click)="sidenav.close()" *ngFor="let link of links" [routerLink]="[link.path]" mat-list-item [activated]="link.isActive">{{link.name}}</a>
+            <a (click)="sidenav.close()" *ngFor="let link of links" [routerLink]="[link.path]" mat-list-item [activated]="link.isActive">{{link.name}}</a>
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>

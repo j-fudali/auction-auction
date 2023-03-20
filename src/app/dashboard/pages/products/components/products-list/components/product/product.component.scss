@@ -1,16 +1,11 @@
 .image-wrapper{
-    min-width: 30vw;
+    min-width: 25vw;
     position: relative;
     img{
         object-fit: cover;
     }
 }
-.image-wrapper-lt-md{
-    max-width: 50vw;
-}
-.image-wrapper-md-higher{
-    max-width: 30vw;
-}
+
 .container{
     border: 1px solid #bfbfbf;
     display: flex;

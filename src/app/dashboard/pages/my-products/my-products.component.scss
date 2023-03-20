@@ -1,3 +1,39 @@
 .container{
-    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+mat-tab-group{
+    width: 80%;
+}
+mat-drawer-content{
+    position: relative;
+}
+.item{
+    cursor: pointer;
+    padding: 5px 0;
+    border-bottom: 1px solid #8a89898b;
+    transition: 50ms ease-in;
+    &:hover{
+        transition: 100ms ease-out;
+        background-color: #aaaaaa5f;
+    }
+    img{
+        object-fit: cover;
+    }
+    .actual-price{
+        font-weight: bold;
+    }
+}
+
+h2{
+    text-align: center;
+}
+.category{
+    font-weight: bold;
+}
+.title{
+    font-size: 18px;
+    font-weight: bold;
 }

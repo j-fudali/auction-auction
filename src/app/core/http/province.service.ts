@@ -6,7 +6,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { ErrorHandlerService } from '../util/error-handler.service';
 
 @Injectable({
-  providedIn: 'any'
+  providedIn: 'root'
 })
 export class ProvinceService {
   private http = inject(HttpClient)

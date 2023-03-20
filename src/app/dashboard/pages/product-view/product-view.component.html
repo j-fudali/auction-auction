@@ -26,8 +26,8 @@
             <mat-divider></mat-divider>
             <section class="bottom-section-middle" [ngClass]="bp.isLtGt ? 'lt-gt' : 'gt-and-higher'">
                 <div>
-                    <h4>Starting price: <i>{{product.starting_price}}</i></h4>
-                    <h4>Starting time: <i>{{product.starting_time | date:'dd-MM-yyyy hh:mm:ss':'GMT+2'}}</i></h4>
+                    <h4>Starting price: <i>{{product.starting_price | number:'1.2'}}</i></h4>
+                    <h4>Starting time: <i>{{product.starting_time + 'Z' | date}}</i></h4>
                     <h4>Category: <i>{{product.category}}</i></h4>
                     <h4></h4>
                 </div>
@@ -37,7 +37,7 @@
                         <img [ngSrc]="product.creator.avatar" priority fill>
                     </div>
                     <h5>{{product.creator.username}}</h5>
-                    <h6>Last online: {{product.creator.last_online | date:'dd-MM-yyy hh:mm:ss':'GMT+2'}}</h6>
+                    <h6>Last online: {{product.creator.last_online + 'Z' | date:'dd.MM.yyy hh:mm:ss'}}</h6>
                 </div>
             </section>
             <h3>Description</h3>
