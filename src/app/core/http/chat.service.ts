@@ -25,7 +25,7 @@ export class ChatService {
     const header = new HttpHeaders().set('Authorization', `JWT${token}`);
     let params = new HttpParams()
     if(page) params = params.set('page', page);
-    return this.http.get<Chat>(this.baseUrl + '/discussions/' + id, {headers: header})
+    return this.http.get<Chat>(this.baseUrl + '/discussions/' + id, {headers: header, params: params})
     .pipe(
       catchError((err: HttpErrorResponse) => {
         if(err.status === 400){

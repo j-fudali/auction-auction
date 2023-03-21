@@ -62,6 +62,7 @@ export class MyProductsComponent implements OnInit{
   onPageChange(page: PageEvent){
     this.filters.page = page.pageIndex + 1
     this.loadProducts()
+    window.scrollTo(0,0)
   }
   filter(itemsFilters: ItemsFilters){
     if(!itemsFilters) this.filters = {page: this.filters.page, type: this.filters.type}
@@ -70,7 +71,6 @@ export class MyProductsComponent implements OnInit{
       this.filters.orderBy = itemsFilters.orderBy
       this.filters.search = itemsFilters.search
     }
-    this.drawer.close()
     this.loadProducts()
   }
   private loadProducts(){

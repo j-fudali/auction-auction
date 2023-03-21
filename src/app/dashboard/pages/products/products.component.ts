@@ -112,6 +112,7 @@ export class ProductsComponent implements OnInit {
       this.itemsFilters = {page: page.pageIndex + 1}
     }
     this.loadProducts();
+    window.scrollTo(0,0)
   }
   reload(){
     this.loadProducts();

@@ -5,6 +5,7 @@
     align-items: center;
 }
 mat-tab-group{
+    min-height: 100vh;
     width: 80%;
 }
 mat-drawer-content{
@@ -36,4 +37,8 @@ h2{
 .title{
     font-size: 18px;
     font-weight: bold;
+}
+.no-products{
+    height: 100vh;
+    width: 100%;
 }

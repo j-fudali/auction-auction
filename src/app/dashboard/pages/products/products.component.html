@@ -9,7 +9,7 @@
         </div>
         <div class="actions-buttons">
             <div>
-                <button  mat-icon-button *ngIf="isLtMd.matches"(click)="drawer.toggle()"><mat-icon>filter_list</mat-icon></button>
+                <button  mat-icon-button *ngIf="isLtMd.matches" (click)="drawer.toggle()"><mat-icon>filter_list</mat-icon></button>
                 <button *ngIf="itemsCount !== 0" (click)="reload()" mat-icon-button><mat-icon>refresh</mat-icon></button>
             </div>
             <button matTooltip="Create new product" *ngIf="isAuthenticated" (click)="createAuction()" mat-icon-button><mat-icon>add</mat-icon></button>

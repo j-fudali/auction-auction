@@ -1,5 +1,5 @@
 <button class="close" *ngIf="isLtMd$ | async" (click)="close()" mat-icon-button><mat-icon>close</mat-icon></button>
-<form [formGroup]="filtersForm" (ngSubmit)="onSubmit()">
+<form  [formGroup]="filtersForm" (ngSubmit)="onSubmit()">
     <mat-form-field>
         <mat-label>Search</mat-label>
         <input type="text" formControlName="search" matInput>

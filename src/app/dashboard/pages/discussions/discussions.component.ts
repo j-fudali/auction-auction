@@ -8,7 +8,7 @@ import { Discussion } from 'src/app/shared/interfaces/discussion/discussion';
 import { ChatsListComponent } from './components/chats-list/chats-list.component';
 import { ActivatedRoute } from '@angular/router';
 import { ChatService } from 'src/app/core/http/chat.service';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { finalize, map, switchMap, tap } from 'rxjs/operators';
 import { Chat } from 'src/app/shared/interfaces/discussion/chat';
 import { UserService } from 'src/app/core/http/user.service';
 import { User } from 'src/app/shared/interfaces/user/user';
@@ -41,10 +41,13 @@ export class DiscussionsComponent implements OnInit {
     this.userId = this.route.snapshot.data.userId
   }
   onScrollUp(){
-    this.chatService.getDiscussion(this.currentDiscussion)
+    this.chatService.getDiscussion(this.currentDiscussion, this.chat.current_page + 1)
     .pipe(
       map( chat => {chat.result = chat.result.reverse(); return chat}),
-      tap( chat => this.chat = chat)
+      tap( chat => {
+        chat.result = [...chat.result, ...this.chat.result]
+        this.chat = chat
+      })
     )
     .subscribe()
   }
@@ -61,8 +64,9 @@ export class DiscussionsComponent implements OnInit {
         this.creator.id_user = this.chat.id_creator
         this.user = chatUsers[1]
         this.user.id_user = this.chat.id_user
-      }), 
+      }),
+      finalize(() => this.isLoading = false)
     )
-    .subscribe(() => this.isLoading = false)
+    .subscribe()
   }
 }
