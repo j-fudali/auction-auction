@@ -53,7 +53,7 @@ export default [
     {path: '', component: DashboardComponent, children: [
         {path: 'products', component: ProductsComponent, resolve: {products: productsListResolver, userId: userIdResolver}},
         {path: 'products/:id', component: ProductViewComponent, resolve: {product: productResolver, userId: userIdResolver}},
-        {path: 'my-profile', component: MyProfileComponent, canActivate: [dashboardGuard], resolve: {profileData: profileResolver}},
+        {path: 'my-profile', loadChildren: () => import('./pages/my-profile/my-profile-routing'), canActivate: [dashboardGuard], resolve: {profileData: profileResolver}},
         {path: 'my-products', component: MyProductsComponent, canActivate: [dashboardGuard]},
         {path: 'discussions', component: DiscussionsComponent, canActivate: [dashboardGuard], resolve: {discussions: discussionsResolver, userId: userIdResolver}},
         {path: '', redirectTo: 'products', pathMatch: 'full'}

@@ -1,9 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { ChatComponent } from './components/chat/chat.component';
 import { DiscussionsService } from 'src/app/core/http/discussions.service';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { Discussion } from 'src/app/shared/interfaces/discussion/discussion';
 import { ChatsListComponent } from './components/chats-list/chats-list.component';
 import { ActivatedRoute } from '@angular/router';
@@ -16,6 +16,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatButtonModule, MatIconButton } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { NewMessage } from 'src/app/shared/interfaces/discussion/new-message';
+import { MessagesService } from 'src/app/core/http/messages.service';
+import { Message } from 'src/app/shared/interfaces/discussion/message';
+import { DateTime } from 'luxon';
 
 @Component({
   standalone: true,
@@ -24,10 +28,13 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./discussions.component.scss']
 })
 export class DiscussionsComponent implements OnInit {
+  @ViewChild('drawer') drawer: MatDrawer;
+  @ViewChild('chatRef') chatRef: ChatComponent;
   private userService = inject(UserService)
   private chatService = inject(ChatService)
   private route = inject(ActivatedRoute)
   private breakpoints = inject(BreakpointObserver)
+  private messagesService = inject(MessagesService)
   isLtMd$ = this.breakpoints.observe([Breakpoints.XSmall, Breakpoints.Small]).pipe(map( v => v.matches))
   discussions: Discussion[]
   chat: Chat;
@@ -54,9 +61,12 @@ export class DiscussionsComponent implements OnInit {
   onDiscussionSelect(idDiscussion: number){
     this.isLoading = true;
     this.currentDiscussion = idDiscussion;
+    if(this.breakpoints.isMatched([Breakpoints.XSmall, Breakpoints.Small])){
+      this.drawer.close()
+    }
     this.chatService.getDiscussion(idDiscussion)
     .pipe(
-      map( chat => {chat.result = chat.result.reverse(); return chat}),
+      map( chat => {if(chat)chat.result = chat.result.reverse(); return chat}),
       tap(chat => this.chat = chat),
       switchMap( chat => forkJoin([this.userService.getUserById(chat.id_creator), this.userService.getUserById(chat.id_user)])),
       tap( chatUsers => {
@@ -68,5 +78,21 @@ export class DiscussionsComponent implements OnInit {
       finalize(() => this.isLoading = false)
     )
     .subscribe()
+  }
+  onNewMessage(newMessage: NewMessage){
+    this.messagesService.createNewMessage(this.currentDiscussion, newMessage.content)
+    .pipe(
+      switchMap( ({message, id_message}) => 
+      {if(newMessage.image)return this.messagesService.addImagesToMessage(id_message, newMessage.image); return of(null)})
+    )
+    .subscribe()
+    const message: Message = {
+      id_sender: this.userId,
+      content: newMessage.content,
+      image: newMessage.imageSrc ? newMessage.imageSrc : null,
+      is_read: 0,
+      created_at: DateTime.now().toUTC().toFormat('yyyy-MM-dd hh:mm:ss')
+    }
+    this.chat.result = [...this.chat.result, message]
   }
 }

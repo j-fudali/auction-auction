@@ -1,6 +1,18 @@
-<div>
+<div class="container">
+    <mat-card class="image-preview" *ngIf="image">
+      <button (click)="remove()" class="remove" mat-mini-fab><mat-icon>remove</mat-icon></button>
+      <div class="image-wrapper">
+        <img [src]="imageSrc"  mat-card-image>
+      </div>
+    </mat-card>
     <mat-form-field color="accent" appearance="outline">
-        <textarea cdkTextareaAutosize [formControl]="newMessage" matInput placeholder="New message..."></textarea>
-        <button mat-icon-button matSuffix><mat-icon>send</mat-icon></button>
+      <textarea cdkTextareaAutosize  [formControl]="messageText" matInput placeholder="New message..."></textarea>
+      <input type="file" multiple class="file-input" accept="image/*" (click)="fileUpload.value = ''" (change)="onImageChange($event)" #fileUpload>
+      <button matSuffix mat-mini-fab color="primary" class="upload-btn"
+        (click)="fileUpload.click()">
+        <mat-icon>attach_file</mat-icon>
+      </button>
+      <button style="margin: 0 5px;" (click)="submit()" mat-icon-button matSuffix><mat-icon>send</mat-icon></button>
+      <mat-error *ngIf="messageText.hasError('maxlength')">Max. 300 characters</mat-error>
     </mat-form-field>
 </div>

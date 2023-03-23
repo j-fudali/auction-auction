@@ -20,13 +20,12 @@ export class HttpErrorsInterceptor implements HttpInterceptor {
       catchError( (err: HttpErrorResponse) => {
         if(err.status ===  401){
           this.errorMessage.showError('Access denied')
-          console.log('blocked')
           this.router.navigate(['/home'])
         }
         if(err.status === 500){
           this.errorMessage.showError('Unknow error. Sorry for problem')
         }
-        return throwError(() => err)
+        return throwError(err)
       })
     )
   }

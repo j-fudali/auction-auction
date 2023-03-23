@@ -1,0 +1,25 @@
+.container{
+    min-height: 90vh;
+}
+mat-card-title{
+    font-size: 24px;
+    font-weight: bold;
+}
+mat-card-header{
+    margin-bottom: 10px;
+}
+form{
+    display: flex;
+    flex-direction: column;
+}
+.actions-buttons{
+
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+mat-card-footer{
+    display: flex;
+    padding: 15px;
+    justify-content: space-between;
+}

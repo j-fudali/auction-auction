@@ -8,13 +8,38 @@ mat-list{
     position: relative;
     scroll-behavior: smooth;
 }
+
 .message{
-    max-width: 50%;
+    max-width: 60%;
     margin-bottom: 5px;
     border: 1px solid #8a898932;
+    padding-top: 5px;
+    .meta{
+        display: flex;
+        gap: 5px;
+    }
+    span{
+        font-size: 20px;
+        font-weight: bold;
+    }
     p{
+        word-wrap: break-word;
         white-space: pre-wrap;
     }
+    mat-icon{
+        align-self: center;
+    }
+}
+.image-wrapper{
+    position: relative;
+    img{
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+    }
+}
+.image-wrapper.message-image{
+    margin-top: 10px;
 }
 .beginning-of-chat{
     margin-bottom: 5px;

@@ -33,7 +33,7 @@
                             <span matListItemLine>{{p.ending_time | timeLeft | async}}</span>
                             <span class="actual-price" matListItemLine>Actual price: {{p.max_bid || p.starting_price | number:'1.2'}}</span>
                             <div  matListItemMeta>
-                                <a mat-icon-button [routerLink]="['../products', p.id_item]"><mat-icon>arrow_forward</mat-icon></a>
+                                <a mat-icon-button><mat-icon>arrow_forward</mat-icon></a>
                             </div>
                         </mat-list-item>
                     </mat-list>

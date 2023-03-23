@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatListModule } from '@angular/material/list';
 import { Discussion } from 'src/app/shared/interfaces/discussion/discussion';
@@ -14,11 +14,12 @@ import { MatDividerModule } from '@angular/material/divider';
   styleUrls: ['./chats-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChatsListComponent {
+export class ChatsListComponent  {
   @Input() discussions: Discussion[];
   @Output() onSelectChat = new EventEmitter<number>()
-
+  activated: number;
   onDiscussionSelect(idDiscussion: number){
     this.onSelectChat.emit(idDiscussion)
+    this.activated = idDiscussion
   }
 }

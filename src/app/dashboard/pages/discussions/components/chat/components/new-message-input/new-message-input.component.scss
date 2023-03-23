@@ -1,7 +1,36 @@
-div{
+.container{
     display: flex;
-    align-items: baseline;
+    gap: 5px;
+    position: relative;
+    align-items: center;
 }
+
 mat-form-field{
     flex-grow: 1;
+}
+.file-input{
+    display: none;
+}
+.image-preview{
+    z-index: 10;
+    position: absolute;
+    height: 200px;
+    width: 30%;
+    top: -210px;
+    left: 0;
+}
+.image-wrapper{
+    width: 100%;
+    height: 100%;
+    img{
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
+.remove{
+    z-index: 10;
+    position: absolute;
+    top: 5px;
+    right: 5px;
 }

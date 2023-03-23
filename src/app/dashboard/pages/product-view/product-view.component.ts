@@ -78,8 +78,6 @@ export class ProductViewComponent implements OnInit {
           if (bidPrice && this.userId) {
             this.product!.max_bid = bidPrice;
             this.product!.id_bidder = this.userId
-            console.log(bidPrice)
-            console.log(this.product)
             return this.bidService.bid(this.productId, bidPrice);
           }
           return of(null);

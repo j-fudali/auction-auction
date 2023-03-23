@@ -4,6 +4,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Item } from 'src/app/shared/interfaces/item/item';
 import { MyItemsFilters } from 'src/app/shared/interfaces/item/items-filters';
+import { LoginAttempt } from 'src/app/shared/interfaces/login-attempt';
 import { PaginatedResponse } from 'src/app/shared/interfaces/paginated-response';
 import { NewUser } from 'src/app/shared/interfaces/user/new-user';
 import { UpdateCredentials } from 'src/app/shared/interfaces/user/update-credentials';
@@ -120,13 +121,13 @@ export class UserService {
     const header = new HttpHeaders().set('Authorization', `JWT${token}`);
     return this.http.patch(this.baseUrl + '/me', credentials, {headers: header}).pipe(
       catchError((err: HttpErrorResponse) => {
-        if(err.status === 400){
+        if(err.status == 400){
           this.errorHandler.showError('Bad data provided')
         }
-        if(err.status === 422){
+        if(err.status == 422){
           this.errorHandler.showError('Coutry or province are not existed')
         }
-        return of(null)
+        return throwError(err)
       })
     )
   }
@@ -164,21 +165,31 @@ export class UserService {
       headers: header
     });
   }
-  loginAttempts(page?:number, orderBy?: string): Observable<any>{
+  loginAttempts(page?:number, orderBy?: string): Observable<PaginatedResponse<LoginAttempt>>{
     const token = this.authService.getToken();
     const header = new HttpHeaders().set('Authorization', `JWT${token}`);
     let params: HttpParams = new HttpParams();
-    if(page){
-      params = params.set('page', page);
-    }
-    if(orderBy){
-      params = params.append('order_by', orderBy)
-    }
-    if(params.has('page') || params.has('order_by')){
-      return this.http.get(this.baseUrl + '/me/login_attempts', {headers: header, params: params});
-    }
-    return this.http.get(this.baseUrl + '/me/login_attempts', {headers: header});
+    if(page) params = params.set('page', page);
+    if(orderBy) params = params.append('order_by', orderBy)
+    return this.http.get<PaginatedResponse<LoginAttempt>>(this.baseUrl + '/me/login_attempts', {headers: header, params: params})
+    .pipe(
+      catchError((err: HttpErrorResponse) => {
+        if(err.status === 422){
+          this.errorHandler.showError('There is no such page of items');
+        }
+        return of({} as PaginatedResponse<LoginAttempt>);
+      })
+    )
   }
+  checkGeneratedReport(): Observable<{is_completed: 1 | 0, created_at: string}>{
+    const token = this.authService.getToken();
+    const header = new HttpHeaders().set('Authorization', `JWT ${token}`);
+    return this.http.get<{is_completed: 1, created_at: string}>(this.baseUrl + '/me/auctions_report', {headers: header})
 
-  
+  }
+  generateReport(){
+    const token = this.authService.getToken();
+    const header = new HttpHeaders().set('Authorization', `JWT${token}`);
+    return this.http.get(this.baseUrl + '/users/me/auctions_report', {headers: header})
+  }
 }
