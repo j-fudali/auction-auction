@@ -65,7 +65,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   discussionsNotReadCount$: Observable<number>;
   notifications: Notification[];
   notificationsCount: number = 0;
-  favorites$: Observable<{ id_favourite: number; product: ParticularItem }[]>;
+  favorites$: Observable<{ id_favourite: number;id_item: number, product: ParticularItem }[]>;
   favoritesCount: number;
   ngOnInit(): void {
     if (this.isAuthenticated) {
@@ -87,7 +87,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
               fs.map((f) =>
                 this.itemsService.getItemById(f.id_item).pipe(
                   map((res) => {
-                    return { id_favourite: f.id_favourite, product: res };
+                    return { id_favourite: f.id_favourite, id_item: f.id_item, product: res };
                   })
                 )
               )

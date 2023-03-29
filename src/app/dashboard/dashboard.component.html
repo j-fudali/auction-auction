@@ -7,11 +7,11 @@
                 <ng-template matTabContent>
                     <ng-container *ngIf="favorites$ | async as favorites" >
                         <mat-list *ngIf="favorites.length > 0; else noFavorites">
-                            <mat-list-item *ngFor="let f of favorites">
+                            <mat-list-item (click)="rightSidenav.close()" [routerLink]="['/dashboard/products', f.id_item]" *ngFor="let f of favorites">
                                 <span matListItemTitle>{{f.product.name}}</span>
                                 <span matListItemLine>{{f.product.creator.username}}</span>
                                 <div matListItemMeta>
-                                    <button mat-icon-button (click)="unlike(f.id_favourite)"><mat-icon>remove</mat-icon></button>
+                                    <button mat-icon-button (click)="unlike(f.id_favourite); $event.stopPropagation()"><mat-icon>remove</mat-icon></button>
                                 </div>
                             </mat-list-item>
                         </mat-list>

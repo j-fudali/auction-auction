@@ -3,15 +3,16 @@ import {
   ElementRef,
   EventEmitter,
   inject,
+  OnDestroy,
   OnInit,
   Output,
   ViewChild,
 } from "@angular/core";
 import { CommonModule, NgOptimizedImage } from "@angular/common";
 import { ActivatedRoute, Router } from "@angular/router";
-import { catchError, map, switchMap, tap } from "rxjs/operators";
+import { catchError, map, switchMap, takeUntil, tap } from "rxjs/operators";
 import { ItemsService } from "src/app/core/http/items.service";
-import { Observable, of, throwError } from "rxjs";
+import { Observable, of, Subject, Subscription, throwError } from "rxjs";
 import { Item } from "src/app/shared/interfaces/item/item";
 import { HttpErrorResponse } from "@angular/common/http";
 import { TimeLeftPipe } from "src/app/shared/pipes/time-left.pipe";
@@ -59,7 +60,7 @@ import { FavoritesStore } from "../services/favorites.store";
   templateUrl: "./product-view.component.html",
   styleUrls: ["./product-view.component.scss"],
 })
-export class ProductViewComponent implements OnInit {
+export class ProductViewComponent implements OnInit, OnDestroy{
   private route = inject(ActivatedRoute);
   private breakpoints = inject(BreakpointObserver);
   private bidService = inject(BidService)
@@ -75,6 +76,7 @@ export class ProductViewComponent implements OnInit {
     .pipe(map((v) => v.matches));
   product: ParticularItem | null;
   productId: number;
+  private destroy$ = new Subject()
   translateX: number = 0;
   imageIndex: number = 0;
   isZoomed: boolean = false;
@@ -85,9 +87,21 @@ export class ProductViewComponent implements OnInit {
   showFavIcon: boolean = false;
 
   ngOnInit(): void {
-    this.product = this.route.snapshot.data.product
-    this.productId = +this.route.snapshot.paramMap.get('id')!;
-    this.userId = this.route.snapshot.data.userId
+    this.route.data
+    .pipe(
+      takeUntil(this.destroy$)
+    )
+    .subscribe( v => {
+      this.userId = v.userId as number
+      this.product = v.product as ParticularItem
+    })
+    this.route.paramMap
+    .pipe(
+      takeUntil(this.destroy$)
+    )
+    .subscribe( p => {
+      this.productId = +p.get('id')!;
+    })
     if(this.userId){
       this.favourite$ = this.favoritesStore.favorites$
       .pipe(
@@ -137,5 +151,9 @@ export class ProductViewComponent implements OnInit {
       )
       .subscribe()
     }
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next()
+    this.destroy$.unsubscribe()
   }
 }

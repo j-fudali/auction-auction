@@ -35,7 +35,7 @@
                 <div class="creator">
                     <h4>Owner</h4>
                     <div class="image-wrapper-creator">
-                        <img [ngSrc]="product.creator.avatar" priority fill>
+                        <img [src]="product.creator.avatar" >
                     </div>
                     <h5>{{product.creator.username}}</h5>
                     <h6>Last online: {{product.creator.last_online + 'Z' | date:'dd.MM.yyy HH:mm:ss'}}</h6>
