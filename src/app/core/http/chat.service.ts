@@ -22,7 +22,7 @@ export class ChatService {
 
   getDiscussion(id: number, page?: number): Observable<Chat>{
     const token = this.authService.getToken();
-    const header = new HttpHeaders().set('Authorization', `JWT${token}`);
+    const header = new HttpHeaders().set('Authorization', `JWT ${token}`);
     let params = new HttpParams()
     if(page) params = params.set('page', page);
     return this.http.get<Chat>(this.baseUrl + '/discussions/' + id, {headers: header, params: params})

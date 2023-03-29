@@ -14,5 +14,6 @@ export interface Item {
   ending_time: string;
   max_bid: number;
   id_bidder: number;
+  id_winner?: number;
   image: string;
 }

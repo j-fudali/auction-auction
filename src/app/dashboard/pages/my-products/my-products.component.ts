@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatListModule } from '@angular/material/list';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { UserService } from 'src/app/core/http/user.service';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { Item } from 'src/app/shared/interfaces/item/item';
 import { map, tap } from 'rxjs/operators';
 import { ItemsFilters, MyItemsFilters } from 'src/app/shared/interfaces/item/items-filters';
@@ -18,12 +18,14 @@ import { TimeLeftPipe } from 'src/app/shared/pipes/time-left.pipe';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { FiltersPanelComponent } from 'src/app/shared/components/filters-panel/filters-panel.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { User } from 'src/app/shared/interfaces/user/user';
+import { GetBidderDataPipe } from 'src/app/shared/pipes/get-bidder-data.pipe';
 
 @Component({
   standalone: true,
   imports: [CommonModule, 
     RouterModule, TimeLeftPipe, MatSidenavModule, FiltersPanelComponent,
-    MatListModule, MatTabsModule, MatProgressSpinnerModule, MatPaginatorModule, MatButtonModule, MatIconModule],
+    MatListModule, MatTabsModule, MatProgressSpinnerModule, MatPaginatorModule, MatButtonModule, MatIconModule, GetBidderDataPipe],
   templateUrl: './my-products.component.html',
   styleUrls: ['./my-products.component.scss']
 })
@@ -36,6 +38,7 @@ export class MyProductsComponent implements OnInit{
   products: Item[]
   filters: MyItemsFilters = {type: 'created'};
   length: number
+  endedUsers: User[]
   ngOnInit(): void {
     this.loadProducts()
   }

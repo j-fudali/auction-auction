@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { FavouritesService } from 'src/app/core/http/favourites.service';
 import { BidModalComponent } from '../components/bid-modal/bid-modal.component';
 
 @Injectable({
@@ -13,9 +14,11 @@ export class ProductsService {
         idItem,
         price: price
       },
-      maxHeight: 300,
-      maxWidth: 300      
+      maxHeight: 500,
+      maxWidth: 500      
     })
     
   }
+
+
 }

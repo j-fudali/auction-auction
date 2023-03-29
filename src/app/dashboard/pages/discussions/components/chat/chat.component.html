@@ -1,7 +1,8 @@
 <mat-card>
     <mat-card-header>
-        <img mat-card-avatar [src]="userId === chat.id_creator ? user.avatar : creator.avatar">
-        <h2 mat-card-title>{{userId === chat.id_creator ? user.username : creator.username}}</h2>
+        <img mat-card-avatar [src]="userId === discussion.discussion_creator.id_user ?  discussion.item.creator_avatar : discussion.discussion_creator.avatar">
+        <h2 mat-card-title>{{userId === discussion.discussion_creator.id_user ? discussion.item.creator_username : discussion.discussion_creator.username}}</h2>
+        <h4 mat-card-title>Product: {{discussion.item.name}}</h4>
     </mat-card-header>
     <mat-card-content *ngIf="{isLtMd: (isLtMd$ | async)} as bp">
         <mat-list appScrollable infiniteScroll  [scrollWindow]="false" (scrolledUp)="onScrollUp()">
@@ -10,21 +11,18 @@
                 <h3  matListItemTitle>Beginning of discussion!</h3>
             </mat-list-item>
             <mat-list-item appOffsetTop  class="message" lines="8" *ngFor="let message of chat.result"
-                [style.margin]="message.id_sender === userId ? 'auto 0 5px auto' : 'auto auto 5px 0'"
-                [style.borderColor]="message.id_sender === userId ? '#8a89898b' : '#8a898932'"
+                [style.margin]="message.id_sender == userId ? 'auto 0 5px auto' : 'auto auto 5px 0'"
+                [style.borderColor]="message.id_sender == userId ? '#8a89898b' : '#8a898932'"
                 >
                 <div matListItemAvatar class="image-wrapper">
-                    <img  [ngSrc]="message.id_sender === user.id_user ? user.avatar : creator.avatar" fill>
+                    <img  [ngSrc]="message.id_sender === discussion.discussion_creator.id_user ? discussion.discussion_creator.avatar : discussion.item.creator_avatar" fill>
                 </div>
-                <span  matListItemTitle>{{message.id_sender === user.id_user ? user.username : creator.username }}</span>
+                <span  matListItemTitle>{{message.id_sender === discussion.discussion_creator.id_user ? discussion.discussion_creator.username : discussion.item.creator_username }}</span>
                 <div [style.height]="bp.isLtMd ? '20vh' : '40vh'" *ngIf="message.image" class="image-wrapper message-image" matListItemLine>
                     <img  [src]="message.image">
                 </div>
                 <p>{{message.content}}</p>
-                <div class="meta" [style.flexDirection]="bp.isLtMd ? 'column' : 'row'" [style.alignItems]="bp.isLtMd ? 'flex-end' : 'flex-start'">
-                    <small class="createdAt">{{message.created_at + 'Z'| date}}</small>
-                    <mat-icon>{{message.is_read === 0 ? 'visibility_off' : 'visibility'}}</mat-icon>
-                </div>
+                <small class="createdAt">{{message.created_at + 'Z'| date}}</small>
             </mat-list-item>
         </mat-list>
     </mat-card-content>

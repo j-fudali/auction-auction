@@ -18,7 +18,6 @@ import { MatIconModule } from '@angular/material/icon';
   standalone: true,
   imports: [CommonModule, MatIconModule, MatListModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatSelectModule],
   template: `
-  <div class="container">
     <h1 mat-dialog-title>Create</h1>
     <div mat-dialog-content>
       <form [formGroup]="newAuctionForm">
@@ -71,7 +70,6 @@ import { MatIconModule } from '@angular/material/icon';
         <button mat-stroked-button [disabled]="newAuctionForm.invalid" [mat-dialog-close]="{data: newAuctionForm.value, images: images}">Create!</button>
       </form>
     </div>
-  </div>
   `,
   styles: [
     `form{

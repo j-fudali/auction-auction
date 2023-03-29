@@ -15,9 +15,11 @@ import { MyProfileComponent } from "./pages/my-profile/my-profile.component";
 import { ProductViewComponent } from "./pages/product-view/product-view.component";
 import { ProductsComponent } from "./pages/products/products.component";
 const dashboardGuard = () => {
-    const isAuth = inject(AuthService).isAuthenticated()
+    const authService = inject(AuthService)
+    const isAuth = authService.isAuthenticated()
+    const refreshToken = authService.getRefreshToken()
     const router = inject(Router)
-    if(!isAuth){
+    if(!isAuth && !refreshToken){
         router.navigate(['/home/login'])
         return false
     }
@@ -50,7 +52,7 @@ const discussionsResolver = () => {
     return discussionsService.getAllDiscussions()
 }
 export default [
-    {path: '', component: DashboardComponent, children: [
+    {path: '', component: DashboardComponent, resolve: {userId: userIdResolver}, children: [
         {path: 'products', component: ProductsComponent, resolve: {products: productsListResolver, userId: userIdResolver}},
         {path: 'products/:id', component: ProductViewComponent, resolve: {product: productResolver, userId: userIdResolver}},
         {path: 'my-profile', loadChildren: () => import('./pages/my-profile/my-profile-routing'), canActivate: [dashboardGuard], resolve: {profileData: profileResolver}},

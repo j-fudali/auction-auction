@@ -22,7 +22,7 @@
         <mat-label>Category</mat-label>
         <mat-select formControlName="category">
             <mat-option >None</mat-option>
-            <mat-option *ngFor="let category of categories$ | async" [value]="category.name">{{category.name}}</mat-option>
+            <mat-option *ngFor="let category of categories" [value]="category.name">{{category.name}}</mat-option>
         </mat-select>
     </mat-form-field>
     <div class="actions-buttons">

@@ -21,12 +21,11 @@ import { CategoriesService } from 'src/app/core/http/categories.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FiltersPanelComponent {
+  @Input() categories: Category[];
   @Output() onFilterProducts = new EventEmitter<ItemsFilters>()
   @Output() onClose = new EventEmitter<void>()
   private breakpoints = inject(BreakpointObserver)
   private fb = inject(FormBuilder);
-  private categoriesSerivce = inject(CategoriesService)
-  categories$ = this.categoriesSerivce.getCategories();
   isLtMd$ = this.breakpoints.observe([Breakpoints.XSmall, Breakpoints.Small]).pipe(map( v => v.matches));
   filtersForm = this.fb.group({
     search: [''],

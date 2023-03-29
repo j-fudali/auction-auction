@@ -1,0 +1,6 @@
+<button  mat-icon-button (click)="favorite ? unlike(favorite.id_favourite) : like(productId)">
+    <mat-icon *ngIf="showFavIcon; else noFav">favorite</mat-icon>
+    <ng-template #noFav>
+        <mat-icon>favorite_border</mat-icon>
+    </ng-template>
+</button>

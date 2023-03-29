@@ -16,20 +16,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { PaginatedResponse } from 'src/app/shared/interfaces/paginated-response';
+import { Discussion } from 'src/app/shared/interfaces/discussion/discussion';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule, MatIconModule, NgOptimizedImage, ScrollableDirective, OffsetTopDirective, NewMessageInputComponent, MatCardModule, MatListModule, InfiniteScrollModule, MatProgressBarModule],
+  imports: [CommonModule, NgOptimizedImage, ScrollableDirective, OffsetTopDirective, NewMessageInputComponent, MatCardModule, MatListModule, InfiniteScrollModule, MatProgressBarModule],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
 })
 export class ChatComponent implements OnChanges, AfterViewInit, OnDestroy {
   @ViewChildren(OffsetTopDirective) listItems: QueryList<OffsetTopDirective>;
   @ViewChild(ScrollableDirective) list: ScrollableDirective;
-  @Input() chat: Chat;
-  @Input() creator: User;
-  @Input() user: User;
+  @Input() chat: PaginatedResponse<Message>;
+  @Input() discussion: Discussion;
   @Input() userId: number;
   @Output() onScrollUpEvent = new EventEmitter<void>
   @Output() onMessageSend = new EventEmitter<NewMessage>

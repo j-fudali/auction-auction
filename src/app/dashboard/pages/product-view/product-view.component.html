@@ -19,6 +19,7 @@
         <section class="title-section" [ngClass]="bp.isLtGt ? 'lt-gt' : 'gt-and-higher'">
             <div>
                 <h2>{{product.name}}</h2>
+                <app-like-button *ngIf="userId && userId != product.creator.id_user && ({favorite: favourite$ | async }) as f" [showFavIcon]="showFavIcon" [favorite]="f.favorite || null" [productId]="productId"></app-like-button>
             </div>
         </section>
         <section class="bottom-section" [ngClass]="bp.isLtGt ? 'lt-gt' : 'gt-and-higher'">
@@ -37,12 +38,23 @@
                         <img [ngSrc]="product.creator.avatar" priority fill>
                     </div>
                     <h5>{{product.creator.username}}</h5>
-                    <h6>Last online: {{product.creator.last_online + 'Z' | date:'dd.MM.yyy hh:mm:ss'}}</h6>
+                    <h6>Last online: {{product.creator.last_online + 'Z' | date:'dd.MM.yyy HH:mm:ss'}}</h6>
                 </div>
             </section>
             <h3>Description</h3>
             <mat-divider></mat-divider>
             <p>{{product.description}}</p>
+        </section>
+        <section *ngIf="userId && product.creator.id_user != userId" class="open-discussion">
+            <h3>Open discussion</h3>
+            <mat-divider></mat-divider>
+            <section>
+                <mat-form-field appearance="outline">
+                    <mat-label>Message</mat-label>
+                    <textarea cdkTextareaAutosize matInput [formControl]="newDiscussionContent"></textarea>
+                </mat-form-field>
+                <button (click)="submit()" mat-stroked-button>Send</button>
+            </section>
         </section>
     </div>
     <mat-card  class="bid-status">
@@ -73,7 +85,10 @@
         <ng-template #closed>
             <mat-card-content>
                 <h4>Auction has been closed</h4>
-                <h5>Winning price: {{product.ending_price || product.max_bid}}</h5>
+                <h5 *ngIf="product.ending_price || product.max_bid; else noOneBuy">Winning price: {{product.ending_price || product.max_bid  | number:'1.2'}}</h5>
+                <ng-template #noOneBuy>
+                    <h5>No one bought this products</h5>
+                </ng-template>
             </mat-card-content>
         </ng-template>
     </mat-card>

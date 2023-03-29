@@ -190,6 +190,9 @@ export class UserService {
   generateReport(){
     const token = this.authService.getToken();
     const header = new HttpHeaders().set('Authorization', `JWT${token}`);
-    return this.http.get(this.baseUrl + '/users/me/auctions_report', {headers: header})
+    return this.http.get(this.baseUrl + '/me/auctions_report', {headers: header})
+  }
+  refreshAccessToken(refreshToken: string): Observable<{token: string; refresh_token: string}>{
+    return this.http.post<{token: string; refresh_token: string}>(this.baseUrl + '/refreshtoken', {token: refreshToken});
   }
 }

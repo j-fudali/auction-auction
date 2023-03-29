@@ -8,6 +8,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { MatBadgeModule } from "@angular/material/badge";
 
 @Component({
   selector: "app-header",
@@ -21,7 +22,8 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatBadgeModule
 
   ],
   templateUrl: "./header.component.html",
@@ -29,7 +31,9 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
 })
 export class HeaderComponent{
   @Input() isAuthenticated: boolean;
+  @Input() newsCount: number;
   @Output() toggleSidenavMenu = new EventEmitter<void>();
+  @Output() onToggleRightSidenav = new EventEmitter<void>();
   @Output() logoutEvent = new EventEmitter<void>();
   search = new FormControl("");
   logout() {
@@ -37,5 +41,8 @@ export class HeaderComponent{
   }
   toggleSidenav() {
     this.toggleSidenavMenu.emit();
+  }
+  toggleRightSidenav(){
+    this.onToggleRightSidenav.emit()
   }
 }

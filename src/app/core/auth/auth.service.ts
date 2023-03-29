@@ -2,6 +2,7 @@ import { Router } from '@angular/router';
 import { inject, Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { DateTime } from 'luxon';
 
 @Injectable({
   providedIn: 'root'
@@ -26,17 +27,16 @@ export class AuthService {
     this.router.navigate(['/home'])
   }
   setToken(token: string){
-    const date = new Date()
-    date.setHours(date.getHours() + 1)
-    date.setMinutes(date.getMinutes() + 5)
-    this.cookies.set('token', token, date, '/')
+    const date = DateTime.now().plus({minutes: 30})
+    this.cookies.delete('token', '/')
+    this.cookies.set('token', token, date.toJSDate(), '/')
   }
   setRefreshToken(refreshToken: string){
-    const date = new Date()
-    date.setHours(date.getHours() + 1)
-    date.setMinutes(date.getMinutes() + 35)
-    this.cookies.set('refresh_token', refreshToken, date, '/')
+    const date = DateTime.now().plus({hours: 1, minutes: 30})
+    this.cookies.delete('refresh_token', '/')
+    this.cookies.set('refresh_token', refreshToken, date.toJSDate(), '/')
   }
+
   getToken(){
     return this.cookies.get('token');
   }

@@ -1,7 +1,7 @@
 <mat-drawer-container  class="container" *ngIf="isLtMd$ | async as isLtMd"
     [style.margin]="isLtMd.matches ? '0 10px' : '10px 50px'">
     <mat-drawer #drawer class="sidenav" [opened]="!isLtMd.matches" [mode]="isLtMd.matches ? 'over' : 'side'">
-        <app-filters-panel (onClose)="drawer.close()" (onFilterProducts)="filterProducts($event)"></app-filters-panel>
+        <app-filters-panel [categories]="categories" (onClose)="drawer.close()" (onFilterProducts)="filterProducts($event)"></app-filters-panel>
     </mat-drawer>
     <mat-drawer-content class="content">
         <div class="spinner-wrapper" *ngIf="loading">

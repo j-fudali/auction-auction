@@ -32,6 +32,15 @@
                             <span matListItemLine>{{p.description | slice:0:50}}</span>
                             <span matListItemLine>{{p.ending_time | timeLeft | async}}</span>
                             <span class="actual-price" matListItemLine>Actual price: {{p.max_bid || p.starting_price | number:'1.2'}}</span>
+                            <ng-container *ngIf="filters.type === 'ended' && p.id_winner">
+                                <ng-container *ngIf="p.id_winner | getBidderData | async as winner">
+                                    <mat-divider matListItemLine></mat-divider>
+                                    <span class="winner-title" matListItemLine>Winner</span>
+                                    <span class="winner" matListItemLine>{{winner.username}}</span>
+                                    <span class="winner-address" matListItemLine>{{winner.street}}, {{winner.city}} {{winner.postcode}}, {{winner.province}}, {{winner.country}}</span>
+                                    <span class="contact">Contact: {{winner.phone}}</span>
+                                </ng-container>
+                            </ng-container>
                             <div  matListItemMeta>
                                 <a mat-icon-button><mat-icon>arrow_forward</mat-icon></a>
                             </div>

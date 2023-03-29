@@ -1,9 +1,31 @@
 mat-sidenav{
+    min-width: 20vw;
+    div{
+        padding: 0 15px;
+    }
     a{
-        padding: 0 40px;
         text-align: center;
     }
     button{
         margin: 10px 0 0 10px;
     }
+}
+mat-list{
+    max-height: 100vh;
+    overflow-y: auto;
+}
+mat-list-item{
+    cursor: pointer !important;
+    border-bottom: 1px solid #8a89898b;
+    transition: 50ms ease-in;
+    &:hover{
+        transition: 100ms ease-out;
+        background-color: #aaaaaa5f;
+    }
+}
+mat-tab-group{
+    padding: 10px;
+}
+h3{
+    text-align: center;
 }

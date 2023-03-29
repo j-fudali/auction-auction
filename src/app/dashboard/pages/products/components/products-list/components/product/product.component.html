@@ -6,6 +6,7 @@
         <div class="header">
             <h2>{{product.name}}</h2>
             <div>
+                <app-like-button [showFavIcon]="showFavIcon" [productId]="product.id_item" [favorite]="f.favorite || null" *ngIf="userId && (userId != product.creator.id_user) && {favorite: favourite$ | async} as f"></app-like-button>
                 <ng-container *ngIf="userId">
                     <ng-container *ngIf="product.id_bidder == userId; else owner">
                         <h4>You already bidded this product</h4>

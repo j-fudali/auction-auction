@@ -1,11 +1,14 @@
 <mat-drawer-container *ngIf="{isLtMd: (isLtMd$| async)} as bp">
-    <mat-drawer #drawer [style.width]="bp.isLtMd ? '30cw': '25vw'" [mode]="bp.isLtMd ? 'over' : 'side'" [opened]="bp.isLtMd ? false : true">
+    <mat-drawer #drawer [style.width]="bp.isLtMd ? '30cw': '25vw'" [mode]="bp.isLtMd ? 'over' : 'side'"
+        [opened]="bp.isLtMd ? false : true">
         <button *ngIf="bp.isLtMd" (click)="drawer.close()" mat-icon-button><mat-icon>close</mat-icon></button>
-        <app-chats-list (onSelectChat)="onDiscussionSelect($event)" [discussions]="discussions"></app-chats-list>
+        <app-chats-list [loadingDiscussions]="loadingDiscussions" [userId]="userId" (onChatListScrollDown)="onChatListScroll()" (onSelectChat)="onDiscussionSelect($event)" [discussions]="discussions$ | async"></app-chats-list>
     </mat-drawer>
     <mat-drawer-content class="content">
-        <button *ngIf="bp.isLtMd" (click)="drawer.toggle()" class="filters-button" mat-icon-button><mat-icon>filter_list</mat-icon></button>
-        <app-chat #chatRef (onMessageSend)="onNewMessage($event)" (onScrollUpEvent)="onScrollUp()" *ngIf="chat && creator && user && userId; else noChatSelected" [chat]="chat" [creator]="creator" [user]="user" [userId]="userId"></app-chat>
+        <button *ngIf="bp.isLtMd" (click)="drawer.toggle()" class="filters-button"
+            mat-icon-button><mat-icon>filter_list</mat-icon></button>
+        <app-chat #chatRef (onMessageSend)="onNewMessage($event)" (onScrollUpEvent)="onScrollUp()"
+            *ngIf="chat && currentDiscussion && userId; else noChatSelected" [chat]="chat" [discussion]="currentDiscussion" [userId]="userId"></app-chat>
         <ng-template #noChatSelected>
             <h2>No chat selected. Choose one of them!</h2>
         </ng-template>

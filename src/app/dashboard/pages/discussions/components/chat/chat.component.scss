@@ -16,6 +16,7 @@ mat-list{
     padding-top: 5px;
     .meta{
         display: flex;
+        align-items: baseline;
         gap: 5px;
     }
     span{

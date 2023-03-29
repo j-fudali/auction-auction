@@ -7,11 +7,16 @@ export interface Discussion {
   discussion_creator: {
     id_user: number;
     username: string;
+    avatar: string;
+    last_online: string;
   }
   item: {
     id_item: number;
     name: string;
-    creator_username: string;
     image: string;
+    id_creator: number;
+    creator_username: string;
+    creator_avatar: string;
+    creator_last_online: string;
   }
 }
