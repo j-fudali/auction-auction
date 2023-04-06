@@ -1,6 +1,9 @@
 .container{
     min-height: 90vh;
 }
+mat-card-title-group{
+    margin-left: 5px;
+}
 mat-card-title{
     font-size: 24px;
     font-weight: bold;
@@ -22,4 +25,18 @@ mat-card-footer{
     display: flex;
     padding: 15px;
     justify-content: space-between;
+}
+.generate-raport{
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    small{
+        text-align: center;
+    }
+}
+.generating{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
 }

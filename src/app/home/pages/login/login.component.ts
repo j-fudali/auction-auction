@@ -13,6 +13,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
 import { AuthService } from "src/app/core/auth/auth.service";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   standalone: true,
@@ -33,7 +34,8 @@ export class LoginComponent implements OnInit {
   private _router: Router = inject(Router);
   private authService: AuthService = inject(AuthService);
   loginForm: FormGroup;
-
+  attemptsNumber: number = 5;
+  waitToLoginTime: number = 30;
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       usernameOrEmail: ["", Validators.required],
@@ -47,7 +49,16 @@ export class LoginComponent implements OnInit {
   get password(): AbstractControl | null {
     return this.loginForm.get("password");
   }
-
+  wait(){
+    this.waitToLoginTime = 30;
+    const timout = setInterval(() => {
+      if(this.waitToLoginTime == 0){
+        this.attemptsNumber = 5
+        clearInterval(timout);
+      }
+      this.waitToLoginTime--
+      }, 1000)
+  }
   onSubmit(): void {
     this._userService.login(this.usernameOrEmail?.value, this.password?.value)
     .subscribe((res) => {
@@ -56,6 +67,15 @@ export class LoginComponent implements OnInit {
         this.authService.setRefreshToken(res.refresh_token);
         this._router.navigate(["/dashboard"]);
       }
-    });
+    },
+    (err: HttpErrorResponse) => {
+      if((err.status === 400 || err.status === 422) && this.attemptsNumber > 0) this.attemptsNumber--;
+      if(this.attemptsNumber == 0){
+        console.log('asdfasd')
+        this.wait()
+        return;
+      }
+    }
+    );
   }
 }

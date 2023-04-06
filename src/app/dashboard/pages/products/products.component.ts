@@ -3,6 +3,7 @@ import {
   Component,
   inject,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges,
 } from "@angular/core";
@@ -48,7 +49,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
   templateUrl: "./products.component.html",
   styleUrls: ["./products.component.scss"],
 })
-export class ProductsComponent implements OnInit {
+export class ProductsComponent implements OnInit, OnDestroy {
   private itemService = inject(ItemsService);
   private breakpoints = inject(BreakpointObserver);
   private categoriesService = inject(CategoriesService);
@@ -56,6 +57,7 @@ export class ProductsComponent implements OnInit {
   private route = inject(ActivatedRoute)
   private router = inject(Router)
   private dialog = inject(MatDialog)
+  private sub: Subscription;
   isLtMd$ = this.breakpoints.observe([Breakpoints.XSmall, Breakpoints.Small]);
 
   //State
@@ -77,6 +79,10 @@ export class ProductsComponent implements OnInit {
     this.categoriesService.getCategories()
     .pipe(tap((categories) => this.categories = categories))
     .subscribe()
+    this.sub = this.route.queryParams.pipe(
+      filter( params => params.search)
+    )
+    .subscribe( (params) => this.filterProducts({ search: params.search }))
   }
 
   createAuction(){
@@ -95,12 +101,12 @@ export class ProductsComponent implements OnInit {
         )
       }),
       switchMap( (res) => {
-        if(!res?.id_item || !res.images) return of(null)
+        if(!res?.id_item || !res.images || !(res.images > 0)) return of({id_item: res?.id_item})
         const mainImage = this.itemService.addImagesToItem(res.id_item, res.images.shift(), 'True')
         return forkJoin([mainImage, ...res.images.map( (i: File) => this.itemService.addImagesToItem(res.id_item, i, 'False'))])
           .pipe(map(() => {return {id_item: res.id_item}}))
       }),
-      tap((res) => res ? this.router.navigate(['/dashboard/products', res.id_item]) : null))
+      tap((res) => {console.log(res);res ? this.router.navigate(['/dashboard/products', res.id_item]) : null}))
     .subscribe()  
   }
 
@@ -114,9 +120,7 @@ export class ProductsComponent implements OnInit {
     this.loadProducts();
     window.scrollTo(0,0)
   }
-  reload(){
-    this.loadProducts();
-  }
+
   filterProducts(itemsFilters: ItemsFilters) {
     if (!itemsFilters) this.itemsFilters = undefined;
     if (itemsFilters) this.itemsFilters = itemsFilters;
@@ -134,5 +138,8 @@ export class ProductsComponent implements OnInit {
         map((res) => res.result),
       )
       .subscribe((items) => {this.loading = false;this.products = items});
+  }
+  ngOnDestroy(): void {
+    this.sub.unsubscribe()
   }
 }

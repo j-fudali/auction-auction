@@ -21,6 +21,7 @@ import { CategoriesService } from 'src/app/core/http/categories.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FiltersPanelComponent {
+  @Input() showSearchBar: boolean = true;
   @Input() categories: Category[];
   @Output() onFilterProducts = new EventEmitter<ItemsFilters>()
   @Output() onClose = new EventEmitter<void>()

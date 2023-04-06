@@ -8,7 +8,7 @@ import {
   Output,
   ViewChild,
 } from "@angular/core";
-import { CommonModule, NgOptimizedImage } from "@angular/common";
+import { CommonModule, Location, NgOptimizedImage } from "@angular/common";
 import { ActivatedRoute, Router } from "@angular/router";
 import { catchError, map, switchMap, takeUntil, tap } from "rxjs/operators";
 import { ItemsService } from "src/app/core/http/items.service";
@@ -69,6 +69,7 @@ export class ProductViewComponent implements OnInit, OnDestroy{
   private discussionStore = inject(DiscussionsStore)
   private favoritesStore = inject(FavoritesStore)
   private router = inject(Router)
+  private location = inject(Location)
   userId: number | null;
 
   isLtGt$ = this.breakpoints
@@ -100,7 +101,10 @@ export class ProductViewComponent implements OnInit, OnDestroy{
       takeUntil(this.destroy$)
     )
     .subscribe( p => {
-      this.productId = +p.get('id')!;
+      const id = +p.get('id')!;
+      this.productId = id
+      if(this.product)
+        this.location.replaceState(this.router.url.replace(id.toString(),this.product.name).replace(' ', '-')+ '-' + id.toString());
     })
     if(this.userId){
       this.favourite$ = this.favoritesStore.favorites$

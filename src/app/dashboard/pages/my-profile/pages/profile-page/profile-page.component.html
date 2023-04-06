@@ -4,13 +4,20 @@
         <mat-card>
             <mat-card-header>
                 <img mat-card-avatar [src]="userData.avatar!">
-                <mat-card-title>{{userData.username}}</mat-card-title>
                 <mat-card-title-group>
+                <mat-card-title>{{userData.username}}</mat-card-title>
                     <mat-card-subtitle>Fullname: <u>{{userData.first_name}} {{userData.last_name}}</u></mat-card-subtitle>
                     <mat-card-subtitle>E-mail: <u>{{userData.email}}</u></mat-card-subtitle>
                     <mat-card-subtitle>Born: <u>{{userData.birth_date + 'Z' | date:'dd.MM.yyyy'}}</u></mat-card-subtitle>
                 </mat-card-title-group>
-                <button (click)="generateReport()" mat-stroked-button type="button">Generate report</button>
+                <div [style.flexDirection]="!notGeneratedYet ? 'column' : 'row'" class="generate-raport">
+                    <button [disabled]="!notGeneratedYet" (click)="generateReport()" mat-stroked-button type="button">Generate report</button>
+                    <small *ngIf="!notGeneratedYet && (reportStatus$ | async)?.is_completed === 1"><i>Already generated</i></small>
+                    <div class="generating" *ngIf="(reportStatus$ | async)?.is_completed === 0">
+                        <mat-spinner  [diameter]="50" color="accent"></mat-spinner>
+                        <small><i>generating...</i></small>
+                    </div>
+                </div>
             </mat-card-header>
             <mat-card-content>
                 <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">

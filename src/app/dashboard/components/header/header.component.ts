@@ -1,14 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatButtonModule } from "@angular/material/button";
-import { RouterModule } from "@angular/router";
+import { Router, RouterModule } from "@angular/router";
 import { MatIconModule } from "@angular/material/icon";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
-import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatBadgeModule } from "@angular/material/badge";
+import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: "app-header",
@@ -30,12 +32,20 @@ import { MatBadgeModule } from "@angular/material/badge";
   styleUrls: ["./header.component.scss"],
 })
 export class HeaderComponent{
+  private router = inject(Router)
+  private breakpoints = inject(BreakpointObserver)
   @Input() isAuthenticated: boolean;
   @Input() newsCount: number;
   @Output() toggleSidenavMenu = new EventEmitter<void>();
   @Output() onToggleRightSidenav = new EventEmitter<void>();
   @Output() logoutEvent = new EventEmitter<void>();
   search = new FormControl("");
+  isLtMd$ = this.breakpoints.observe([Breakpoints.XSmall, Breakpoints.Small]).pipe(map( v => v.matches))
+  onSearch(){
+    if(this.search.dirty && this.search.value){
+      this.router.navigate(['/dashboard/products'], {queryParams: {search: this.search.value}})
+    }
+  }
   logout() {
     this.logoutEvent.emit();
   }
