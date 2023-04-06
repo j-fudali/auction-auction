@@ -83,14 +83,18 @@ export class MyProductsComponent implements OnInit{
       tap( res => {
         this.length = res.items_count
       }),
-      concatMap(res => forkJoin(res.result.map(i =>
+      concatMap(res => 
+        res.result ?
+        forkJoin(res.result.map(i =>
         i.id_winner ? 
         this.usersService.getUserById(i.id_winner)
         .pipe(
           map( user => {return {item: i, winner: user}})
         )
         : of({item: i, winner: null}))
-      ))
+      ) :
+        of([])
+      )
       )
       .subscribe(
         res => {
