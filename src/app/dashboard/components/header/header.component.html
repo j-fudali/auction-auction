@@ -1,18 +1,22 @@
-<mat-toolbar class="header" color="primary">
-    <div>
-        <button mat-icon-button *ngIf="isAuthenticated" (click)="toggleSidenav()"><mat-icon>menu</mat-icon></button>
-        <button routerLink="/dashboard" mat-button><h2>Auction Auction</h2></button>
-    </div>
-    <div class="actions-buttons" *ngIf="isAuthenticated; else noAuthencticated" [matBadgeSize]="'medium'" [matBadgeColor]="'accent'" [matBadgePosition]="'below after'" [matBadge]="newsCount || null">
-        <button  (click)="logout()" mat-stroked-button><h4>Log-out</h4></button>
-        <button mat-icon-button (click)="toggleRightSidenav()">
-            <mat-icon>more_vert</mat-icon>
-        </button>
-    </div>
-    <ng-template #noAuthencticated>
-        <mat-button-toggle-group>
-            <mat-button-toggle  routerLink="/home/login">Log-in</mat-button-toggle>
-            <mat-button-toggle routerLink="/home/sign-in">Sign-in</mat-button-toggle>
-        </mat-button-toggle-group>
-    </ng-template>
+<mat-toolbar class="header" color="primary" *ngIf="{isLtMd: (isLtMd$ | async)} as bp" >
+        <div>
+            <button mat-icon-button *ngIf="isAuthenticated" (click)="toggleSidenav()"><mat-icon>menu</mat-icon></button>
+            <button routerLink="/dashboard" mat-button><h2>Auction<br *ngIf="bp.isLtMd">Auction</h2></button>
+        </div>
+        <mat-form-field color="accent" appearance="outline" [style.width]="bp.isLtMd ? '50%' : '70%'">
+            <input type="text" matInput [formControl]="search" placeholder="Search...">
+            <button (click)="onSearch()" mat-icon-button matSuffix><mat-icon>search</mat-icon></button>
+        </mat-form-field>
+        <div class="actions-buttons" *ngIf="isAuthenticated; else noAuthencticated">
+            <button  (click)="logout()" mat-stroked-button><h4>Log-out</h4></button>
+            <button mat-icon-button (click)="toggleRightSidenav()"  [matBadgeSize]="'medium'" [matBadgeColor]="'accent'" [matBadgePosition]="'above after'" [matBadge]="newsCount || null">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        </div>
+        <ng-template #noAuthencticated>
+            <mat-button-toggle-group>
+                <mat-button-toggle  routerLink="/home/login">Log-in</mat-button-toggle>
+                <mat-button-toggle routerLink="/home/sign-up">Sign-in</mat-button-toggle>
+            </mat-button-toggle-group>
+        </ng-template>
 </mat-toolbar>

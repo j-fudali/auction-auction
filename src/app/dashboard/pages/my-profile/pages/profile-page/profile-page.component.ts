@@ -15,8 +15,9 @@ import { catchError, map, switchMap, tap } from "rxjs/operators";
 import { UserService } from "src/app/core/http/user.service";
 import { User } from "src/app/shared/interfaces/user/user";
 import { HttpErrorResponse } from "@angular/common/http";
-import { of, throwError } from "rxjs";
+import { Observable, of, throwError } from "rxjs";
 import { DateTime } from "luxon";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @Component({
   standalone: true,
@@ -31,6 +32,7 @@ import { DateTime } from "luxon";
     MatDatepickerModule,
     MatSelectModule,
     RouterModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: "./profile-page.component.html",
   styleUrls: ["./profile-page.component.scss"],
@@ -71,8 +73,18 @@ export class ProfilePageComponent implements OnInit {
     city: [this.userData.city, Validators.required],
     street: [this.userData.street, Validators.required],
   });
-
+  reportStatus$: Observable<{is_completed: 0 | 1; created_at: string;} | null>
+  notGeneratedYet: boolean = true;
   ngOnInit(): void {
+    this.reportStatus$ = this.userService.checkGeneratedReport()
+    .pipe(
+      tap( () => this.notGeneratedYet = false),
+      catchError((err: HttpErrorResponse) => {
+        console.log(err.status)
+        err.status == 404 ? this.notGeneratedYet = true : this.notGeneratedYet = false;
+        return of(null)
+      })
+    )
     this.profileForm.disable();
   }
   get phone() {
@@ -100,36 +112,7 @@ export class ProfilePageComponent implements OnInit {
     this.profileForm.enable();
   }
   generateReport() {
-    this.userService
-      .checkGeneratedReport()
-      .pipe(
-        catchError((err: HttpErrorResponse) => {
-          if (err.status == 404) {
-            this.snackbar.open(
-              "We start to generate your report. Check out your email few minutes later.",
-              "X",
-              { duration: 5000 }
-            );
-          }
-          console.log('Błąd')
-          return of(null);
-        }),
-        switchMap((res) => {
-          if (res == null) {
-            return this.userService.generateReport();
-          }
-          if (res != null)
-            this.snackbar.open(
-              `Your report ${
-                res.is_completed === 0
-                  ? "is not completed"
-                  : "is completed. You can now download it from your email"
-              }. You started it at ` + DateTime.fromFormat(res.created_at,'yyyy-MM-dd hh:mm:ss', {zone: 'utc'}).toLocal().toFormat('dd.MM.yyyy HH:mm:ss')
-            , 'X');
-          return of(null);
-        })
-      )
-      .subscribe();
+    this.userService.generateReport().subscribe()
   }
   onSubmit() {
     if (this.profileForm.dirty && this.profileForm.valid) {

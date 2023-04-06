@@ -21,7 +21,7 @@ export class NewMessageInputComponent {
   @ViewChild('fileUpload') fileUpload: HTMLInputElement;
   @Output() newMessageSend = new EventEmitter<NewMessage>()
   private cd = inject(ChangeDetectorRef)
-  messageText = new FormControl('', [Validators.required, Validators.maxLength(300)])
+  messageText = new FormControl('', [Validators.maxLength(300)])
   image: File | undefined;
   imageSrc: string | undefined;
   onImageChange(event: any){
@@ -35,9 +35,11 @@ export class NewMessageInputComponent {
   }
   remove(){
     this.image = undefined;
+    this.imageSrc = undefined
   }
   submit(){
-    if(this.messageText.valid && this.messageText.dirty){
+    if(this.image && this.image?.size > 2000000) return;
+    if(this.messageText.value && this.messageText.valid && this.messageText.dirty && this.messageText.value?.length <= 300 ){
       const newMessage: NewMessage = {
         content: this.messageText.value!,
         image: this.image,

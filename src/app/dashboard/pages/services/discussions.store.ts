@@ -24,7 +24,7 @@ export class DiscussionsStore {
     this.discussionsService.getAllDiscussions()
     .pipe(
       tap( res => {
-        this.discussions = res.result
+        this.discussions = res.result || []
         this.pages = res.pages;
         this.currentPage = res.current_page
       })

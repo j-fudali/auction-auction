@@ -4,6 +4,9 @@
       <div class="image-wrapper">
         <img [src]="imageSrc"  mat-card-image>
       </div>
+      <mat-card-footer>
+        <mat-error class="max-size" *ngIf="image && image.size > 2000000">Max. file size: 2MB</mat-error>
+      </mat-card-footer>
     </mat-card>
     <mat-form-field color="accent" appearance="outline">
       <textarea cdkTextareaAutosize  [formControl]="messageText" matInput placeholder="New message..."></textarea>
@@ -15,4 +18,4 @@
       <button style="margin: 0 5px;" (click)="submit()" mat-icon-button matSuffix><mat-icon>send</mat-icon></button>
       <mat-error *ngIf="messageText.hasError('maxlength')">Max. 300 characters</mat-error>
     </mat-form-field>
-</div>
+  </div>

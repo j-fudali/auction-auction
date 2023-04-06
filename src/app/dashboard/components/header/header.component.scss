@@ -1,12 +1,20 @@
 .header{
     display: flex;
     justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    height: 15vh;
 }
 div{
+    height: 100%;
     display: flex;
     align-items: center;
 }
 .actions-buttons{
     z-index: 11;
     gap: 5px;
+}
+
+button{
+    font-size: 16px;
 }

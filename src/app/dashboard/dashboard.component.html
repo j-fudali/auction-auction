@@ -25,7 +25,7 @@
                 <ng-template mat-tab-label><div [matBadge]="notificationsCount || null" matBadgeColor="accent" ><mat-icon>notifications</mat-icon>Notifications</div></ng-template>
                 <ng-template matTabContent>
                     <mat-list *ngIf="notifications && notifications.length > 0; else noNotifications">
-                        <mat-list-item (click)="rightSidenav.close()" [routerLink]="['/dashboard/products', d.id_item]" *ngFor="let d of notifications">
+                        <mat-list-item (click)="rightSidenav.close()" [routerLink]="d.id_item ? ['/dashboard/products', d.id_item] : ['/dashboard/my-profile']" *ngFor="let d of notifications">
                             <h3 matListItemTitle>{{d.title_html}}</h3>
                             <span matListItemLine>{{d.body_html}}</span>
                             <div matListItemMeta>
@@ -49,7 +49,7 @@
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
-        <app-header [newsCount]="(notificationsCount + (favoritesCount || 0))" (onToggleRightSidenav)="rightSidenav.toggle()" [isAuthenticated]="isAuthenticated" (logoutEvent)="logout()" (toggleSidenavMenu)="sidenav.toggle()"></app-header>
+        <app-header [newsCount]="notificationsCount" (onToggleRightSidenav)="rightSidenav.toggle()" [isAuthenticated]="isAuthenticated" (logoutEvent)="logout()" (toggleSidenavMenu)="sidenav.toggle()"></app-header>
         <router-outlet></router-outlet>
         <app-footer></app-footer>
     </mat-sidenav-content>

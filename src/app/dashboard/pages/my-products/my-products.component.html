@@ -25,21 +25,18 @@
             <ng-template  #content matTabContent>
                 <ng-container *ngIf="products && products.length > 0; else noProducts">
                     <mat-list>
-                        <mat-list-item [routerLink]="['../products', p.id_item]" class="item" *ngFor="let p of products">
-                            <span class="title" matListItemTitle>{{p.name}}</span>
-                            <span class="category" matListItemLine>{{p.category}}</span>
-                            <img matListItemAvatar [src]="p.image || '../../../assets/noimage.jpg'">
-                            <span matListItemLine>{{p.description | slice:0:50}}</span>
-                            <span matListItemLine>{{p.ending_time | timeLeft | async}}</span>
-                            <span class="actual-price" matListItemLine>Actual price: {{p.max_bid || p.starting_price | number:'1.2'}}</span>
-                            <ng-container *ngIf="filters.type === 'ended' && p.id_winner">
-                                <ng-container *ngIf="p.id_winner | getBidderData | async as winner">
-                                    <mat-divider matListItemLine></mat-divider>
-                                    <span class="winner-title" matListItemLine>Winner</span>
-                                    <span class="winner" matListItemLine>{{winner.username}}</span>
-                                    <span class="winner-address" matListItemLine>{{winner.street}}, {{winner.city}} {{winner.postcode}}, {{winner.province}}, {{winner.country}}</span>
-                                    <span class="contact">Contact: {{winner.phone}}</span>
-                                </ng-container>
+                        <mat-list-item [routerLink]="['../products', p.item.id_item]" class="item" *ngFor="let p of products">
+                            <span class="title" matListItemTitle>{{p.item.name}}</span>
+                            <span class="category" matListItemLine>{{p.item.category}}</span>
+                            <img matListItemAvatar [src]="p.item.image || '../../../assets/noimage.jpg'">
+                            <span matListItemLine>{{p.item.description | slice:0:50}}</span>
+                            <span matListItemLine>{{p.item.ending_time | timeLeft | async}}</span>
+                            <span class="actual-price" matListItemLine>Actual price: {{p.item.max_bid || p.item.starting_price | number:'1.2'}}</span>
+                            <ng-container *ngIf="filters.type === 'ended' && p.winner">
+                                <span class="winner-title" matListItemLine>Winner</span>
+                                <span class="winner" matListItemLine>{{p.winner.username}}</span>
+                                <span class="winner-address" matListItemLine>{{p.winner.street}}, {{p.winner.city}} {{p.winner.postcode}}, {{p.winner.province}}, {{p.winner.country}}</span>
+                                <span class="contact">Contact: {{p.winner.phone}}</span>
                             </ng-container>
                             <div  matListItemMeta>
                                 <a mat-icon-button><mat-icon>arrow_forward</mat-icon></a>

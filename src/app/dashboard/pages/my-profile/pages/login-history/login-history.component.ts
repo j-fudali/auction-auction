@@ -38,7 +38,7 @@ import { RouterModule } from '@angular/router';
       </ng-container>
       <ng-container matColumnDef="isSuccessful">
         <th mat-header-cell *matHeaderCellDef>Successful?</th>
-        <td mat-cell *matCellDef="let element"> {{element.is_successful === 1 ? 'Yes' : 'No'}} </td>
+        <td mat-cell *matCellDef="let element" [style.color]="element.is_successful ? 'green' : 'red'"> {{element.is_successful === 1 ? 'Yes' : 'No'}} </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="bp.isLtSm ? onSmallColumns : displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: (bp.isLtSm ? onSmallColumns : displayedColumns);"></tr>
@@ -48,7 +48,7 @@ import { RouterModule } from '@angular/router';
   `,
   styles: [
     `.container{
-      height: 100vh;
+      min-height: 100vh;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -57,6 +57,12 @@ import { RouterModule } from '@angular/router';
     `table{
       width: 100%;
     }`,
+    `.spinner-wrapper{
+      align-items:center;
+      mat-spinner{
+        margin: 0;
+      }
+    }`
     ]
 })
 export class LoginHistoryComponent implements OnInit{

@@ -85,8 +85,10 @@ mat-error{
   top: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
-
+  align-items: flex-start;
+  mat-spinner{
+    margin-top: 50px;
+  }
 }
 .filters-button{
   margin: 5px 16px 5px 16px;

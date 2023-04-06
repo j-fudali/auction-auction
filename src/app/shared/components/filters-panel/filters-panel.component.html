@@ -1,6 +1,6 @@
 <button class="close" *ngIf="isLtMd$ | async" (click)="close()" mat-icon-button><mat-icon>close</mat-icon></button>
 <form  [formGroup]="filtersForm" (ngSubmit)="onSubmit()">
-    <mat-form-field>
+    <mat-form-field *ngIf="showSearchBar">
         <mat-label>Search</mat-label>
         <input type="text" formControlName="search" matInput>
     </mat-form-field>
@@ -26,7 +26,7 @@
         </mat-select>
     </mat-form-field>
     <div class="actions-buttons">
-        <button type="submit" mat-stroked-button>Filter</button>
-        <button type="button" mat-stroked-button (click)="reset()">Reset</button>
+        <button type="submit" [disabled]="!filtersForm.dirty" mat-stroked-button>Filter</button>
+        <button type="button" [disabled]="!filtersForm.dirty" mat-stroked-button (click)="reset()">Reset</button>
     </div>
 </form>

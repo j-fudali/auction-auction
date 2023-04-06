@@ -112,7 +112,8 @@ export class UserService {
         if(err.status == 422){
           this.errorHandler.showError(err.error.details || err.error.message)
         }
-        return of(null)
+        return throwError(err)
+
       })
     )
   }
@@ -187,10 +188,10 @@ export class UserService {
     return this.http.get<{is_completed: 1, created_at: string}>(this.baseUrl + '/me/auctions_report', {headers: header})
 
   }
-  generateReport(){
+  generateReport(): Observable<{message: string}>{
     const token = this.authService.getToken();
     const header = new HttpHeaders().set('Authorization', `JWT${token}`);
-    return this.http.get(this.baseUrl + '/me/auctions_report', {headers: header})
+    return this.http.post<{message: string}>(this.baseUrl + '/me/auctions_report', {headers: header})
   }
   refreshAccessToken(refreshToken: string): Observable<{token: string; refresh_token: string}>{
     return this.http.post<{token: string; refresh_token: string}>(this.baseUrl + '/refreshtoken', {token: refreshToken});

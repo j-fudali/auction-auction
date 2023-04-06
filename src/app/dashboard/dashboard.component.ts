@@ -117,6 +117,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
   unlike(idFavorite: number) {
     this.favoritesStore.unlike(idFavorite);
   }

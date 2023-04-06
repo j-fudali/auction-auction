@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { MatListModule } from '@angular/material/list';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { UserService } from 'src/app/core/http/user.service';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { Item } from 'src/app/shared/interfaces/item/item';
-import { map, tap } from 'rxjs/operators';
+import { concatMap, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { ItemsFilters, MyItemsFilters } from 'src/app/shared/interfaces/item/items-filters';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
@@ -35,7 +35,7 @@ export class MyProductsComponent implements OnInit{
   private breakpoints = inject(BreakpointObserver)
   isLtMd$ = this.breakpoints.observe([Breakpoints.XSmall, Breakpoints.Small]).pipe(map( v => v.matches))
   isLoading: boolean;
-  products: Item[]
+  products:{item: Item, winner: User | null}[]
   filters: MyItemsFilters = {type: 'created'};
   length: number
   endedUsers: User[]
@@ -78,10 +78,23 @@ export class MyProductsComponent implements OnInit{
   }
   private loadProducts(){
     this.isLoading = true
-    this.usersService.getMyProducts(this.filters).subscribe(
-      res => {
-        this.products = res.result
+    this.usersService.getMyProducts(this.filters)
+    .pipe(
+      tap( res => {
         this.length = res.items_count
+      }),
+      concatMap(res => forkJoin(res.result.map(i =>
+        i.id_winner ? 
+        this.usersService.getUserById(i.id_winner)
+        .pipe(
+          map( user => {return {item: i, winner: user}})
+        )
+        : of({item: i, winner: null}))
+      ))
+      )
+      .subscribe(
+        res => {
+        this.products = res
         this.isLoading = false;
       }
     )
