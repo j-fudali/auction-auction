@@ -1,11 +1,11 @@
-<mat-toolbar class="header" color="primary" *ngIf="{isLtMd: (isLtMd$ | async)} as bp" >
+<mat-toolbar [style.height]="bp.isLtMd ? '10vh' : '15vh'" class="header" color="primary" *ngIf="{isLtMd: (isLtMd$ | async)} as bp" >
         <div>
             <button mat-icon-button *ngIf="isAuthenticated" (click)="toggleSidenav()"><mat-icon>menu</mat-icon></button>
-            <button routerLink="/dashboard" mat-button><h2>Auction<br *ngIf="bp.isLtMd">Auction</h2></button>
+            <button routerLink="/dashboard" mat-button><h2>Auction Auction</h2></button>
         </div>
-        <mat-form-field color="accent" appearance="outline" [style.width]="bp.isLtMd ? '50%' : '70%'">
+        <mat-form-field color="primary" appearance="fill" *ngIf="!bp.isLtMd">
             <input type="text" matInput [formControl]="search" placeholder="Search...">
-            <button (click)="onSearch()" mat-icon-button matSuffix><mat-icon>search</mat-icon></button>
+            <button (click)="onSearch()" color="primary" mat-icon-button matSuffix><mat-icon>search</mat-icon></button>
         </mat-form-field>
         <div class="actions-buttons" *ngIf="isAuthenticated; else noAuthencticated">
             <button  (click)="logout()" mat-stroked-button><h4>Log-out</h4></button>

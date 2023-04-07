@@ -3,7 +3,6 @@
     justify-content: space-between;
     align-items: baseline;
     gap: 10px;
-    height: 15vh;
 }
 div{
     height: 100%;
@@ -17,4 +16,7 @@ div{
 
 button{
     font-size: 16px;
+}
+mat-form-field{
+    width: 70%;
 }

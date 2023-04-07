@@ -101,11 +101,13 @@ export class ProductViewComponent implements OnInit, OnDestroy{
       takeUntil(this.destroy$)
     )
     .subscribe( p => {
-      const id = +p.get('id')!;
-      this.productId = id
+      const linkArray = p.get('id')?.split('-')
+      const id = linkArray![linkArray!.length - 1];
+      this.productId = +id;
+      console.log(this.router.url.split('/').pop())
       if(this.product)
-        this.location.replaceState(this.router.url.replace(id.toString(),this.product.name).replace(' ', '-')+ '-' + id.toString());
-    })
+        this.location.replaceState(this.router.url.replace(this.router.url.split('/').pop()!, this.product.name.replace(' ', '-') + '-' + this.productId))
+      })
     if(this.userId){
       this.favourite$ = this.favoritesStore.favorites$
       .pipe(

@@ -19,7 +19,7 @@
         <section class="title-section" [ngClass]="bp.isLtGt ? 'lt-gt' : 'gt-and-higher'">
             <div>
                 <h2>{{product.name}}</h2>
-                <app-like-button *ngIf="userId && userId != product.creator.id_user && ({favorite: favourite$ | async }) as f" [showFavIcon]="showFavIcon" [favorite]="f.favorite || null" [productId]="productId"></app-like-button>
+                <app-like-button *ngIf="product.is_closed === 0 && userId && userId != product.creator.id_user && ({favorite: favourite$ | async }) as f" [showFavIcon]="showFavIcon" [favorite]="f.favorite || null" [productId]="productId"></app-like-button>
             </div>
         </section>
         <section class="bottom-section" [ngClass]="bp.isLtGt ? 'lt-gt' : 'gt-and-higher'">

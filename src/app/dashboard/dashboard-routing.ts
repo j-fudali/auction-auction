@@ -31,7 +31,8 @@ const productsListResolver = () => {
 }
 const productResolver = (route: ActivatedRouteSnapshot) => {
     const itemsService = inject(ItemsService)
-    return itemsService.getItemById(+route.paramMap.get('id')!)
+    const linkArray = route.paramMap.get('id')?.split('-');
+    return itemsService.getItemById(+linkArray![linkArray!.length - 1])
 }
 const userIdResolver = () => {
     const authService = inject(AuthService)

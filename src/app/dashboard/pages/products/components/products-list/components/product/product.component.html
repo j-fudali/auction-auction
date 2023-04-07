@@ -1,6 +1,6 @@
 <div class="container" *ngIf="{isLtMd: (isLtMd$ | async)} as bp">
     <div class="image-wrapper">
-        <img  [ngSrc]="product.image || '../../../../assets/noimage.jpg'" priority fill>
+        <img  [ngSrc]="product.image || 'assets/noimage.jpg'" priority fill>
     </div>
     <div class="content">
         <div class="header">
