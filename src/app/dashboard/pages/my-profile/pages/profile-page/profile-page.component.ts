@@ -75,12 +75,12 @@ export class ProfilePageComponent implements OnInit {
   });
   reportStatus$: Observable<{is_completed: 0 | 1; created_at: string;} | null>
   notGeneratedYet: boolean = true;
+  clickedGenerated: boolean = false;
   ngOnInit(): void {
     this.reportStatus$ = this.userService.checkGeneratedReport()
     .pipe(
       tap( () => this.notGeneratedYet = false),
       catchError((err: HttpErrorResponse) => {
-        console.log(err.status)
         err.status == 404 ? this.notGeneratedYet = true : this.notGeneratedYet = false;
         return of(null)
       })
@@ -112,7 +112,8 @@ export class ProfilePageComponent implements OnInit {
     this.profileForm.enable();
   }
   generateReport() {
-    this.userService.generateReport().subscribe()
+    this.userService.generateReport()
+    .subscribe(() => this.clickedGenerated = true)
   }
   onSubmit() {
     if (this.profileForm.dirty && this.profileForm.valid) {

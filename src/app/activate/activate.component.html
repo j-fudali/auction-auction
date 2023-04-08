@@ -1,9 +1,9 @@
 <div class="container">
     <ng-container *ngIf="isSuccessful; else notSuccessful">
-        <h2>Aktywacja powiodła się</h2>
+        <h2>Activation completed</h2>
     </ng-container>
     <ng-template #notSuccessful>
-        <h2 class="notSuccessful">Aktywacja NIE powiodła się</h2>
+        <h2 class="notSuccessful">Activation NOT completed</h2>
     </ng-template>
-    <h3>Przekierowanie nastąpi za: {{timout}}</h3>
+    <h3>Redirect in: {{timeout}}</h3>
 </div>

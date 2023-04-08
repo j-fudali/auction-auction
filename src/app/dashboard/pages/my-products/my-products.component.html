@@ -28,7 +28,7 @@
                         <mat-list-item [routerLink]="['../products', p.item.id_item]" class="item" *ngFor="let p of products">
                             <span class="title" matListItemTitle>{{p.item.name}}</span>
                             <span class="category" matListItemLine>{{p.item.category}}</span>
-                            <img matListItemAvatar [src]="p.item.image || '../../../assets/noimage.jpg'">
+                            <img matListItemAvatar [src]="p.item.image || 'assets/noimage.jpg'">
                             <span matListItemLine>{{p.item.description | slice:0:50}}</span>
                             <span matListItemLine>{{p.item.ending_time | timeLeft | async}}</span>
                             <span class="actual-price" matListItemLine>Actual price: {{p.item.max_bid || p.item.starting_price | number:'1.2'}}</span>

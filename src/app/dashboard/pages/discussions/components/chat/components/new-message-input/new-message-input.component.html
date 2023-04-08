@@ -17,5 +17,6 @@
       </button>
       <button style="margin: 0 5px;" (click)="submit()" mat-icon-button matSuffix><mat-icon>send</mat-icon></button>
       <mat-error *ngIf="messageText.hasError('maxlength')">Max. 300 characters</mat-error>
+      <mat-hint><small>Png, jpg or gif files only, max. 2MB</small></mat-hint>
     </mat-form-field>
   </div>

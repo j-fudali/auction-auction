@@ -7,7 +7,7 @@
                 <ng-template matTabContent>
                     <ng-container *ngIf="favorites$ | async as favorites" >
                         <mat-list *ngIf="favorites.length > 0; else noFavorites">
-                            <mat-list-item (click)="rightSidenav.close()" [routerLink]="['/dashboard/products', f.id_item]" *ngFor="let f of favorites">
+                            <mat-list-item (click)="rightSidenav.close()" replaceUrl="true" [routerLink]="['/dashboard/products', f.id_item]" *ngFor="let f of favorites">
                                 <span matListItemTitle>{{f.product.name}}</span>
                                 <span matListItemLine>{{f.product.creator.username}}</span>
                                 <div matListItemMeta>
@@ -25,7 +25,7 @@
                 <ng-template mat-tab-label><div [matBadge]="notificationsCount || null" matBadgeColor="accent" ><mat-icon>notifications</mat-icon>Notifications</div></ng-template>
                 <ng-template matTabContent>
                     <mat-list *ngIf="notifications && notifications.length > 0; else noNotifications">
-                        <mat-list-item (click)="rightSidenav.close()" [routerLink]="d.id_item ? ['/dashboard/products', d.id_item] : ['/dashboard/my-profile']" *ngFor="let d of notifications">
+                        <mat-list-item (click)="rightSidenav.close()" replaceUrl="true" [routerLink]="d.id_item ? ['/dashboard/products', d.id_item] : ['/dashboard/my-profile']" *ngFor="let d of notifications">
                             <h3 matListItemTitle>{{d.title_html}}</h3>
                             <span matListItemLine>{{d.body_html}}</span>
                             <div matListItemMeta>

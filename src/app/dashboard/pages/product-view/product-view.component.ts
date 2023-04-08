@@ -88,26 +88,22 @@ export class ProductViewComponent implements OnInit, OnDestroy{
   showFavIcon: boolean = false;
 
   ngOnInit(): void {
-    this.route.data
-    .pipe(
-      takeUntil(this.destroy$)
-    )
-    .subscribe( v => {
-      this.userId = v.userId as number
-      this.product = v.product as ParticularItem
-    })
     this.route.paramMap
     .pipe(
-      takeUntil(this.destroy$)
-    )
-    .subscribe( p => {
-      const linkArray = p.get('id')?.split('-')
-      const id = linkArray![linkArray!.length - 1];
-      this.productId = +id;
-      console.log(this.router.url.split('/').pop())
-      if(this.product)
-        this.location.replaceState(this.router.url.replace(this.router.url.split('/').pop()!, this.product.name.replace(' ', '-') + '-' + this.productId))
+      switchMap( p => {
+        const linkArray = p.get('id')?.split('-')
+        const id = linkArray![linkArray!.length - 1];
+        this.productId = +id;
+        return  this.route.data;
       })
+      )
+      .subscribe( v => {
+        this.userId = v.userId as number
+        this.product = v.product as ParticularItem
+        if(this.product){
+          this.location.replaceState(this.router.url.replace(this.router.url.split('/').pop()!, this.product.name.replace(' ', '-') + '-' + this.productId))
+        }
+    })
     if(this.userId){
       this.favourite$ = this.favoritesStore.favorites$
       .pipe(

@@ -14,7 +14,7 @@ import { FiltersPanelComponent } from "../../../shared/components/filters-panel/
 import { MatPaginatorModule, PageEvent } from "@angular/material/paginator";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { catchError, filter, finalize, map, switchMap, take, takeUntil, tap } from "rxjs/operators";
-import { forkJoin, Observable, of, Subscription, throwError } from "rxjs";
+import { forkJoin, Observable, of, Subject, Subscription, throwError } from "rxjs";
 import { ItemsFilters } from "src/app/shared/interfaces/item/items-filters";
 import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 import { MatButtonModule } from "@angular/material/button";
@@ -31,6 +31,7 @@ import { CreateAuctionModalComponent } from "./components/create-auction-modal/c
 import { NewItem } from "src/app/shared/interfaces/item/new-item";
 import { DateTime } from "luxon";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { HeaderService } from "../services/header.service";
 
 
 @Component({
@@ -51,13 +52,14 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 })
 export class ProductsComponent implements OnInit, OnDestroy {
   private itemService = inject(ItemsService);
+  private headerService = inject(HeaderService)
   private breakpoints = inject(BreakpointObserver);
   private categoriesService = inject(CategoriesService);
   private authService = inject(AuthService)
   private route = inject(ActivatedRoute)
   private router = inject(Router)
   private dialog = inject(MatDialog)
-  private sub: Subscription;
+  private destroy$ = new Subject()
   isLtMd$ = this.breakpoints.observe([Breakpoints.XSmall, Breakpoints.Small]);
 
   //State
@@ -79,10 +81,18 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.categoriesService.getCategories()
     .pipe(tap((categories) => this.categories = categories))
     .subscribe()
-    this.sub = this.route.queryParams.pipe(
-      filter( params => params.search)
+    this.route.queryParams.pipe(
+      takeUntil(this.destroy$),
     )
     .subscribe( (params) => this.filterProducts({ search: params.search }))
+    this.headerService.onReset$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((v) =>{
+        if(v === true){
+          this.headerService.onReset = false;
+          this.filterProducts({})
+        }
+      })
   }
 
   createAuction(){
@@ -106,7 +116,9 @@ export class ProductsComponent implements OnInit, OnDestroy {
         return forkJoin([mainImage, ...res.images.map( (i: File) => this.itemService.addImagesToItem(res.id_item, i, 'False'))])
           .pipe(map(() => {return {id_item: res.id_item}}))
       }),
-      tap((res) => {console.log(res);res ? this.router.navigate(['/dashboard/products', res.id_item]) : null}))
+      tap((res) => {
+        if(res.id_item) this.router.navigate(['/dashboard/products', res.id_item])
+      }))
     .subscribe()  
   }
 
@@ -140,6 +152,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
       .subscribe((items) => {this.loading = false;this.products = items});
   }
   ngOnDestroy(): void {
-    this.sub.unsubscribe()
+    this.destroy$.next(true)
+    this.destroy$.unsubscribe()
   }
 }

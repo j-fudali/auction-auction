@@ -190,10 +190,22 @@ export class UserService {
   }
   generateReport(): Observable<{message: string}>{
     const token = this.authService.getToken();
-    const header = new HttpHeaders().set('Authorization', `JWT${token}`);
-    return this.http.post<{message: string}>(this.baseUrl + '/me/auctions_report', {headers: header})
+    const header = new HttpHeaders().set('Authorization', `JWT ${token}`);
+    console.log(token)
+    if(token){
+      return this.http.post<{message: string}>(this.baseUrl + '/me/auctions_report',{},{headers: header})
+      .pipe(
+        catchError((err:HttpErrorResponse) => {
+          if(err.status === 503){
+            this.errorHandler.showError('You already generated your raport!')
+          }
+          return of({} as {message: string})
+        })
+      )
+    }
+    return (of())
   }
   refreshAccessToken(refreshToken: string): Observable<{token: string; refresh_token: string}>{
-    return this.http.post<{token: string; refresh_token: string}>(this.baseUrl + '/refreshtoken', {token: refreshToken});
+    return this.http.post<{token: string; refresh_token: string}>(this.baseUrl + '/refreshtoken', {token: refreshToken})
   }
 }

@@ -62,6 +62,7 @@ import { MatIconModule } from '@angular/material/icon';
             (click)="fileUpload.click()">
             <mat-icon>attach_file</mat-icon>
           </button>
+          <small>Png, jpg or gif files only, max. 2MB</small>
           </div>
         </div>
         <mat-list class="files-list" *ngIf="images.length > 0">
@@ -77,16 +78,9 @@ import { MatIconModule } from '@angular/material/icon';
     flex-direction: column;
     gap: 5px;
   }`,
-  `
-  .files-upload{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
-  }
-  `,
   `.file-upload{
      display: flex;
+     flex-direction: column;
      align-items: center;
      gap: 5px;
   }`,

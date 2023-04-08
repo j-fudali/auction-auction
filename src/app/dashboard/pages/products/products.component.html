@@ -1,4 +1,4 @@
-<mat-drawer-container  class="container" *ngIf="isLtMd$ | async as isLtMd"
+<mat-drawer-container   *ngIf="isLtMd$ | async as isLtMd"
     [style.margin]="isLtMd.matches ? '0 10px' : '10px 50px'">
     <mat-drawer #drawer class="sidenav" [opened]="!isLtMd.matches" [mode]="isLtMd.matches ? 'over' : 'side'">
         <app-filters-panel [showSearchBar]="true" [categories]="categories" (onClose)="drawer.close()" (onFilterProducts)="filterProducts($event)"></app-filters-panel>

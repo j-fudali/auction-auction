@@ -6,6 +6,7 @@
         <mat-form-field color="primary" appearance="fill" *ngIf="!bp.isLtMd">
             <input type="text" matInput [formControl]="search" placeholder="Search...">
             <button (click)="onSearch()" color="primary" mat-icon-button matSuffix><mat-icon>search</mat-icon></button>
+            <button (click)="reset()" color="primary" matSuffix mat-icon-button><mat-icon>backspace</mat-icon></button>
         </mat-form-field>
         <div class="actions-buttons" *ngIf="isAuthenticated; else noAuthencticated">
             <button  (click)="logout()" mat-stroked-button><h4>Log-out</h4></button>

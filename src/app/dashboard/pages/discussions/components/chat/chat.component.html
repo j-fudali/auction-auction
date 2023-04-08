@@ -15,7 +15,7 @@
                 [style.borderColor]="message.id_sender == userId ? '#8a89898b' : '#8a898932'"
                 >
                 <div matListItemAvatar class="image-wrapper">
-                    <img  [ngSrc]="message.id_sender === discussion.discussion_creator.id_user ? discussion.discussion_creator.avatar : discussion.item.creator_avatar" fill>
+                    <img  [src]="message.id_sender === discussion.discussion_creator.id_user ? discussion.discussion_creator.avatar : discussion.item.creator_avatar">
                 </div>
                 <span  matListItemTitle>{{message.id_sender === discussion.discussion_creator.id_user ? discussion.discussion_creator.username : discussion.item.creator_username }}</span>
                 <div [style.height]="bp.isLtMd ? '20vh' : '40vh'" *ngIf="message.image" class="image-wrapper message-image" matListItemLine>

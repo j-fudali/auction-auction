@@ -16,7 +16,7 @@ import { DATE_PIPE_DEFAULT_OPTIONS } from '@angular/common';
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom([HttpClientModule, MatSnackBarModule, BrowserAnimationsModule, MatLuxonDateModule, MatDialogModule]),
-    provideRouter(routes, withRouterConfig({onSameUrlNavigation: 'reload'})),
+    provideRouter(routes),
     {provide: MAT_LUXON_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}},
     {provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: {dateFormat: 'dd.MM.yyyy HH:mm:ss'}},
     {provide: HTTP_INTERCEPTORS, useClass: HttpErrorsInterceptor, multi: true},

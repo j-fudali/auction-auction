@@ -15,7 +15,7 @@ export class ActivateComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private userService = inject(UserService);
-  timout = 5;
+  timeout = 5;
   isSuccessful: boolean;
   ngOnInit() {
     this.isSuccessful = false;
@@ -31,8 +31,8 @@ export class ActivateComponent implements OnInit {
       });
     timer(1000, 1000)
       .pipe(
-        map(() => (this.timout = this.timout - 1)),
-        take(this.timout + 1)
+        map(() => (this.timeout = this.timeout - 1)),
+        take(this.timeout + 1)
       )
       .subscribe((i) => {
         if (i === 0) {

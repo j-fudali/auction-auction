@@ -11,6 +11,7 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatBadgeModule } from "@angular/material/badge";
 import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 import { map } from "rxjs/operators";
+import { HeaderService } from "../../pages/services/header.service";
 
 @Component({
   selector: "app-header",
@@ -34,6 +35,7 @@ import { map } from "rxjs/operators";
 export class HeaderComponent{
   private router = inject(Router)
   private breakpoints = inject(BreakpointObserver)
+  private headerService = inject(HeaderService)
   @Input() isAuthenticated: boolean;
   @Input() newsCount: number;
   @Output() toggleSidenavMenu = new EventEmitter<void>();
@@ -45,6 +47,11 @@ export class HeaderComponent{
     if(this.search.dirty && this.search.value){
       this.router.navigate(['/dashboard/products'], {queryParams: {search: this.search.value}})
     }
+  }
+  reset(){
+    this.router.navigate(['/dashboard/products'])
+    this.search.reset()
+    this.headerService.onReset = true;
   }
   logout() {
     this.logoutEvent.emit();
