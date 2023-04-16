@@ -26,7 +26,7 @@ import { fromEvent, Observable, of, Subject, Subscription } from "rxjs";
 import { AuthService } from "src/app/core/auth/auth.service";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatTooltip, MatTooltipModule } from "@angular/material/tooltip";
-import { FavoritesStore } from "src/app/dashboard/pages/services/favorites.store";
+import { FavoritesStore } from "src/app/dashboard/services/favorites.store";
 import { Favourite } from "src/app/shared/interfaces/favourite";
 import { LikeButtonComponent } from "src/app/shared/components/like-button/like-button.component";
 

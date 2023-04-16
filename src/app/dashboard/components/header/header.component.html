@@ -1,23 +1,33 @@
-<mat-toolbar [style.height]="bp.isLtMd ? '10vh' : '15vh'" class="header" color="primary" *ngIf="{isLtMd: (isLtMd$ | async)} as bp" >
-        <div>
-            <button mat-icon-button *ngIf="isAuthenticated" (click)="toggleSidenav()"><mat-icon>menu</mat-icon></button>
-            <button routerLink="/dashboard" mat-button><h2>Auction Auction</h2></button>
-        </div>
-        <mat-form-field color="primary" appearance="fill" *ngIf="!bp.isLtMd">
-            <input type="text" matInput [formControl]="search" placeholder="Search...">
-            <button (click)="onSearch()" color="primary" mat-icon-button matSuffix><mat-icon>search</mat-icon></button>
-            <button (click)="reset()" color="primary" matSuffix mat-icon-button><mat-icon>backspace</mat-icon></button>
-        </mat-form-field>
-        <div class="actions-buttons" *ngIf="isAuthenticated; else noAuthencticated">
-            <button  (click)="logout()" mat-stroked-button><h4>Log-out</h4></button>
-            <button mat-icon-button (click)="toggleRightSidenav()"  [matBadgeSize]="'medium'" [matBadgeColor]="'accent'" [matBadgePosition]="'above after'" [matBadge]="newsCount || null">
+<mat-toolbar [style.alignItems]="bp.isLtMd ? 'center' : 'baseline'" [style.height]="bp.isLtMd ? '12.5vh' : '15vh'"
+    class="header" color="primary" *ngIf="{isLtMd: (isLtMd$ | async)} as bp">
+    <div>
+        <button [matBadge]="(discussionsNewsCount > 0) ? discussionsNewsCount : null" matBadgeColor="accent"
+            matBadgePosition="above before" mat-icon-button *ngIf="isAuthenticated"
+            (click)="toggleSidenav()"><mat-icon>menu</mat-icon></button>
+        <button routerLink="/dashboard" mat-button>
+            <h2 [style.fontSize]="bp.isLtMd ? '1em' : '1.5em'">Auction Auction</h2>
+        </button>
+    </div>
+    <mat-form-field color="primary" appearance="fill" *ngIf="!bp.isLtMd">
+        <input type="text" matInput [formControl]="search" placeholder="Search...">
+        <button (click)="onSearch()" color="primary" mat-icon-button matSuffix><mat-icon>search</mat-icon></button>
+        <button (click)="reset()" color="primary" matSuffix mat-icon-button><mat-icon>backspace</mat-icon></button>
+    </mat-form-field>
+    <div class="actions-buttons" *ngIf="isAuthenticated; else noAuthencticated">
+        <mat-button-toggle-group [matBadgeSize]="'medium'" [matBadgeColor]="'accent'"
+            [matBadgePosition]="'above before'" [matBadge]="newsCount || null">
+            <mat-button-toggle (click)="toggleRightSidenav()">
                 <mat-icon>more_vert</mat-icon>
-            </button>
-        </div>
-        <ng-template #noAuthencticated>
-            <mat-button-toggle-group>
-                <mat-button-toggle  routerLink="/home/login">Log-in</mat-button-toggle>
-                <mat-button-toggle routerLink="/home/sign-up">Sign-in</mat-button-toggle>
-            </mat-button-toggle-group>
-        </ng-template>
+            </mat-button-toggle>
+            <mat-button-toggle (click)="logout()">
+                <mat-icon>exit_to_app</mat-icon>
+            </mat-button-toggle>
+        </mat-button-toggle-group>
+    </div>
+    <ng-template #noAuthencticated>
+        <mat-button-toggle-group>
+            <mat-button-toggle routerLink="/home/login">Log-in</mat-button-toggle>
+            <mat-button-toggle routerLink="/home/sign-up">Sign-in</mat-button-toggle>
+        </mat-button-toggle-group>
+    </ng-template>
 </mat-toolbar>

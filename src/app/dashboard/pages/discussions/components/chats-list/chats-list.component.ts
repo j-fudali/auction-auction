@@ -5,7 +5,7 @@ import { Discussion } from 'src/app/shared/interfaces/discussion/discussion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
-import { DiscussionsStore } from '../../../services/discussions.store';
+import { DiscussionsStore } from '../../../../services/discussions.store';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 

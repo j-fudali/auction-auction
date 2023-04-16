@@ -1,12 +1,12 @@
 <button class="close" *ngIf="isLtMd$ | async" (click)="close()" mat-icon-button><mat-icon>close</mat-icon></button>
-<form  [formGroup]="filtersForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="filtersForm" (ngSubmit)="onSubmit()">
     <mat-form-field *ngIf="showSearchBar">
         <mat-label>Search</mat-label>
         <input type="text" formControlName="search" matInput>
     </mat-form-field>
     <mat-form-field>
         <mat-label>Order</mat-label>
-        <mat-select  formControlName="orderBy">
+        <mat-select formControlName="orderBy">
             <mat-option>None</mat-option>
             <mat-optgroup label="By starting time">
                 <mat-option value="newest">Newest</mat-option>
@@ -21,7 +21,7 @@
     <mat-form-field>
         <mat-label>Category</mat-label>
         <mat-select formControlName="category">
-            <mat-option >None</mat-option>
+            <mat-option>None</mat-option>
             <mat-option *ngFor="let category of categories" [value]="category.name">{{category.name}}</mat-option>
         </mat-select>
     </mat-form-field>

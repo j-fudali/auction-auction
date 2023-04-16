@@ -21,8 +21,8 @@ import { FavouritesService } from "../core/http/favourites.service";
 import { NotificationsService } from "../core/http/notifications.service";
 import { Notification } from "../shared/interfaces/notification";
 import { MatBadgeModule } from "@angular/material/badge";
-import { DiscussionsStore } from "./pages/services/discussions.store";
-import { FavoritesStore } from "./pages/services/favorites.store";
+import { DiscussionsStore } from "./services/discussions.store";
+import { FavoritesStore } from "./services/favorites.store";
 import { ItemsService } from "../core/http/items.service";
 import { ParticularItem } from "../shared/interfaces/item/particular-item";
 
@@ -65,7 +65,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   discussionsNotReadCount$: Observable<number>;
   notifications: Notification[];
   notificationsCount: number = 0;
-  favorites$: Observable<{ id_favourite: number;id_item: number, product: ParticularItem }[]>;
+  favorites$: Observable<
+    { id_favourite: number; id_item: number; product: ParticularItem }[]
+  >;
   favoritesCount: number;
   ngOnInit(): void {
     if (this.isAuthenticated) {
@@ -82,21 +84,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.favoritesStore.init();
       this.favorites$ = this.favoritesStore.favorites$.pipe(
         switchMap((fs) => {
-          if(fs && fs.length > 0){
+          if (fs && fs.length > 0) {
             return forkJoin(
               fs.map((f) =>
                 this.itemsService.getItemById(f.id_item).pipe(
                   map((res) => {
-                    return { id_favourite: f.id_favourite, id_item: f.id_item, product: res };
+                    return {
+                      id_favourite: f.id_favourite,
+                      id_item: f.id_item,
+                      product: res,
+                    };
                   })
                 )
               )
-            )
-  
+            );
           }
           return of([]);
-        }
-        ),
+        }),
         tap((fs) => (this.favoritesCount = fs.length))
       );
       this.notificationsService

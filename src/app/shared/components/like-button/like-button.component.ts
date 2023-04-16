@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Favourite } from '../../interfaces/favourite';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, tap } from 'rxjs/operators';
-import { FavoritesStore } from 'src/app/dashboard/pages/services/favorites.store';
+import { FavoritesStore } from 'src/app/dashboard/services/favorites.store';
 
 @Component({
   selector: 'app-like-button',

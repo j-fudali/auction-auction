@@ -1,31 +1,33 @@
-mat-sidenav{
-    min-width: 20vw;
-    div{
-        padding: 0 15px;
-    }
-    a{
-        text-align: center;
-    }
-    button{
-        margin: 10px 0 0 10px;
-    }
+mat-sidenav {
+  button {
+    margin: 10px 0 0 10px;
+  }
+  max-width: 100vw;
 }
-mat-list{
-    max-height: 100vh;
-    overflow-y: auto;
-}
-mat-list-item{
-    cursor: pointer !important;
-    border-bottom: 1px solid #8a89898b;
-    transition: 50ms ease-in;
-    &:hover{
-        transition: 100ms ease-out;
-        background-color: #aaaaaa5f;
-    }
-}
-mat-tab-group{
-    padding: 10px;
-}
-.no-content{
+.left-sidenav {
+  div {
+    padding: 0 15px;
+  }
+  a {
     text-align: center;
+  }
+}
+mat-list {
+  max-height: 100vh;
+  overflow-y: auto;
+}
+mat-list-item {
+  cursor: pointer !important;
+  border-bottom: 1px solid #8a89898b;
+  transition: 50ms ease-in;
+  &:hover {
+    transition: 100ms ease-out;
+    background-color: #aaaaaa5f;
+  }
+}
+mat-tab-group {
+  padding: 10px;
+}
+.no-content {
+  text-align: center;
 }

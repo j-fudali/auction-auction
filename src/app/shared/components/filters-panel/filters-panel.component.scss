@@ -1,16 +1,14 @@
-:host{
-    padding-top: 10px;
+form {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
 }
-form{
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
+.actions-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
-.actions-buttons{
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-.close{
-    margin-top: 10px;
+.close {
+  margin-top: 10px;
+  margin-left: 10px;
 }

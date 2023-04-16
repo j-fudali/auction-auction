@@ -1,19 +1,19 @@
-.content{
-    min-height: 100vh;
-    padding-top: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.content {
+  min-height: 100vh;
+  padding: 10px 10px 0 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-mat-drawer{
-    button{
-        margin: 10px 0 0 10px;
-    }
+mat-drawer {
+  button {
+    margin: 10px 0 0 10px;
+  }
 }
-.filters-button{
-    align-self: flex-start;
+.filters-button {
+  align-self: flex-start;
 }
-h2{
-    margin-top: 25%;
-    text-align: center;
+h2 {
+  margin-top: 25%;
+  text-align: center;
 }

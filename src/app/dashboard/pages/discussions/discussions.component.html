@@ -1,16 +1,21 @@
 <mat-drawer-container *ngIf="{isLtMd: (isLtMd$| async)} as bp">
-    <mat-drawer #drawer [style.width]="bp.isLtMd ? '30cw': '25vw'" [mode]="bp.isLtMd ? 'over' : 'side'"
+    <mat-drawer #drawer [style.width]="bp.isLtMd ? '70vw': '25vw'" [mode]="bp.isLtMd ? 'over' : 'side'"
         [opened]="bp.isLtMd ? false : true">
         <button *ngIf="bp.isLtMd" (click)="drawer.close()" mat-icon-button><mat-icon>close</mat-icon></button>
-        <app-chats-list [loadingDiscussions]="loadingDiscussions" [userId]="userId" (onChatListScrollDown)="onChatListScroll()" (onSelectChat)="onDiscussionSelect($event)" [discussions]="discussions$ | async"></app-chats-list>
+        <app-chats-list [loadingDiscussions]="loadingDiscussions" [userId]="userId"
+            (onChatListScrollDown)="onChatListScroll()" (onSelectChat)="onDiscussionSelect($event)"
+            [discussions]="discussions$ | async"></app-chats-list>
     </mat-drawer>
     <mat-drawer-content class="content">
-        <button *ngIf="bp.isLtMd" (click)="drawer.toggle()" class="filters-button"
+        <button *ngIf="bp.isLtMd && isDiscussionsExists" (click)="drawer.toggle()" class="filters-button"
             mat-icon-button><mat-icon>filter_list</mat-icon></button>
-        <app-chat #chatRef (onMessageSend)="onNewMessage($event)" (onScrollUpEvent)="onScrollUp()"
-            *ngIf="chat && currentDiscussion && userId; else noChatSelected" [chat]="chat" [discussion]="currentDiscussion" [userId]="userId"></app-chat>
+        <app-chat [style.width]="bp.isLtMd ? '100%' : '80%'" #chatRef (onMessageSend)="onNewMessage($event)"
+            (onScrollUpEvent)="onScrollUp()" *ngIf="chat && currentDiscussion && userId; else noChatSelected"
+            [chat]="chat" [discussion]="currentDiscussion" [userId]="userId"></app-chat>
         <ng-template #noChatSelected>
-            <h2>No chat selected. Choose one of them!</h2>
+            <h2>{{isDiscussionsExists ?
+                'No chat selected. Choose one of them!' :
+                'You don\'t have any discussions yet!'}}</h2>
         </ng-template>
         <div class="spinner-wrapper" *ngIf="isLoading">
             <mat-spinner color="accent"></mat-spinner>

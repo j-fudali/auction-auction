@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output, inject } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  inject,
+} from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatButtonModule } from "@angular/material/button";
@@ -11,7 +18,7 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatBadgeModule } from "@angular/material/badge";
 import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 import { map } from "rxjs/operators";
-import { HeaderService } from "../../pages/services/header.service";
+import { HeaderService } from "../../services/header.service";
 
 @Component({
   selector: "app-header",
@@ -26,31 +33,35 @@ import { HeaderService } from "../../pages/services/header.service";
     MatInputModule,
     ReactiveFormsModule,
     MatButtonToggleModule,
-    MatBadgeModule
-
+    MatBadgeModule,
   ],
   templateUrl: "./header.component.html",
   styleUrls: ["./header.component.scss"],
 })
-export class HeaderComponent{
-  private router = inject(Router)
-  private breakpoints = inject(BreakpointObserver)
-  private headerService = inject(HeaderService)
+export class HeaderComponent {
+  private router = inject(Router);
+  private breakpoints = inject(BreakpointObserver);
+  private headerService = inject(HeaderService);
   @Input() isAuthenticated: boolean;
   @Input() newsCount: number;
+  @Input() discussionsNewsCount: number;
   @Output() toggleSidenavMenu = new EventEmitter<void>();
   @Output() onToggleRightSidenav = new EventEmitter<void>();
   @Output() logoutEvent = new EventEmitter<void>();
   search = new FormControl("");
-  isLtMd$ = this.breakpoints.observe([Breakpoints.XSmall, Breakpoints.Small]).pipe(map( v => v.matches))
-  onSearch(){
-    if(this.search.dirty && this.search.value){
-      this.router.navigate(['/dashboard/products'], {queryParams: {search: this.search.value}})
+  isLtMd$ = this.breakpoints
+    .observe([Breakpoints.XSmall, Breakpoints.Small])
+    .pipe(map((v) => v.matches));
+  onSearch() {
+    if (this.search.dirty && this.search.value) {
+      this.router.navigate(["/dashboard/products"], {
+        queryParams: { search: this.search.value },
+      });
     }
   }
-  reset(){
-    this.router.navigate(['/dashboard/products'])
-    this.search.reset()
+  reset() {
+    this.router.navigate(["/dashboard/products"]);
+    this.search.reset();
     this.headerService.onReset = true;
   }
   logout() {
@@ -59,7 +70,7 @@ export class HeaderComponent{
   toggleSidenav() {
     this.toggleSidenavMenu.emit();
   }
-  toggleRightSidenav(){
-    this.onToggleRightSidenav.emit()
+  toggleRightSidenav() {
+    this.onToggleRightSidenav.emit();
   }
 }

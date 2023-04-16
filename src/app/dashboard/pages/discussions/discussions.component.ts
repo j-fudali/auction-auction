@@ -21,7 +21,7 @@ import { MessagesService } from "src/app/core/http/messages.service";
 import { Message } from "src/app/shared/interfaces/discussion/message";
 import { DateTime } from "luxon";
 import { PaginatedResponse } from "src/app/shared/interfaces/paginated-response";
-import { DiscussionsStore } from "../services/discussions.store";
+import { DiscussionsStore } from "../../services/discussions.store";
 
 @Component({
   standalone: true,
@@ -41,8 +41,8 @@ export class DiscussionsComponent implements OnInit {
   @ViewChild("drawer") drawer: MatDrawer;
   @ViewChild("chatRef") chatRef: ChatComponent;
   private chatService = inject(ChatService);
-  private discussionsService = inject(DiscussionsService)
-  private discussionsStore = inject(DiscussionsStore)
+  private discussionsService = inject(DiscussionsService);
+  private discussionsStore = inject(DiscussionsStore);
   private route = inject(ActivatedRoute);
   private breakpoints = inject(BreakpointObserver);
   private messagesService = inject(MessagesService);
@@ -50,6 +50,7 @@ export class DiscussionsComponent implements OnInit {
     .observe([Breakpoints.XSmall, Breakpoints.Small])
     .pipe(map((v) => v.matches));
   discussions$: Observable<Discussion[]>;
+  isDiscussionsExists: boolean;
   chat: PaginatedResponse<Message>;
   currentDiscussion: Discussion;
   userId: number;
@@ -59,42 +60,44 @@ export class DiscussionsComponent implements OnInit {
   chatListCurrentPage: number;
   loadingDiscussions: boolean = false;
   ngOnInit(): void {
-    this.discussions$ = this.discussionsService.getAllDiscussions()
-    .pipe(
-      tap( res => {
-        this.chatListCurrentPage = res.current_page
-        this.chatListPages = res.pages
+    this.discussions$ = this.discussionsService.getAllDiscussions().pipe(
+      tap((res) => {
+        this.chatListCurrentPage = res.current_page;
+        this.chatListPages = res.pages;
+        this.isDiscussionsExists = res.result && res.result.length > 0;
       }),
-      map( res => res.result),
-      tap( res => {
-        if(this.discussionsStore.selectedDiscussion){
-          const selected = res.find( d => d.id_discussion = this.discussionsStore.selectedDiscussion)
-          if(selected){
-            this.onDiscussionSelect(selected)
+      map((res) => res.result),
+      tap((res) => {
+        if (this.discussionsStore.selectedDiscussion) {
+          const selected = res.find(
+            (d) => (d.id_discussion = this.discussionsStore.selectedDiscussion)
+          );
+          if (selected) {
+            this.onDiscussionSelect(selected);
           }
         }
       })
-    )
+    );
     this.userId = this.route.snapshot.data.userId;
   }
-  onChatListScroll(){
-      //TODO chat list on scrollDown
-      if(this.chatListCurrentPage < this.chatListPages){
-        this.loadingDiscussions = true;
-        this.discussions$ = this.discussions$.pipe(
-          mergeMap( ds => 
-            this.discussionsService.getAllDiscussions(this.chatListCurrentPage + 1)
+  onChatListScroll() {
+    if (this.chatListCurrentPage < this.chatListPages) {
+      this.loadingDiscussions = true;
+      this.discussions$ = this.discussions$.pipe(
+        mergeMap((ds) =>
+          this.discussionsService
+            .getAllDiscussions(this.chatListCurrentPage + 1)
             .pipe(
-              tap( res => {
-                this.chatListCurrentPage = res.current_page
-                this.chatListPages = res.pages
+              tap((res) => {
+                this.chatListCurrentPage = res.current_page;
+                this.chatListPages = res.pages;
               }),
-              map( res => [...ds, ...res.result]),
-              finalize(() => this.loadingDiscussions = false)
+              map((res) => [...ds, ...res.result]),
+              finalize(() => (this.loadingDiscussions = false))
             )
-          )
         )
-      }
+      );
+    }
   }
   onScrollUp() {
     this.chatService
@@ -118,7 +121,7 @@ export class DiscussionsComponent implements OnInit {
     this.isLoading = true;
     this.currentDiscussion = discussion;
     if (this.breakpoints.isMatched([Breakpoints.XSmall, Breakpoints.Small])) {
-      if(this.drawer){
+      if (this.drawer) {
         this.drawer.close();
       }
     }
@@ -159,15 +162,16 @@ export class DiscussionsComponent implements OnInit {
       created_at: DateTime.now().toUTC().toFormat("yyyy-MM-dd hh:mm:ss"),
     };
     this.chat.result = [...this.chat.result, message];
-    this.discussionsStore.discussions = this.discussionsStore.discussions
-    .map( d => {
-      if(d.id_discussion == this.currentDiscussion.id_discussion){
-        d.id_sender = message.id_sender,
-        d.content = message.content,
-        d.created_at = message.created_at,
-        d.is_read = message.is_read
+    this.discussionsStore.discussions = this.discussionsStore.discussions.map(
+      (d) => {
+        if (d.id_discussion == this.currentDiscussion.id_discussion) {
+          (d.id_sender = message.id_sender),
+            (d.content = message.content),
+            (d.created_at = message.created_at),
+            (d.is_read = message.is_read);
+        }
+        return d;
       }
-      return d
-    } )
+    );
   }
 }

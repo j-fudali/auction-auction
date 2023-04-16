@@ -1,20 +1,19 @@
-
-mat-drawer-content{
-    position: relative;
-    min-height: 80vh;
+mat-drawer-content {
+  position: relative;
+  min-height: 80vh;
 }
 
-.actions-buttons{
-    margin: 5px 16px 5px 16px;
+.actions-buttons {
+  margin: 5px 16px 5px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  div {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 5px;
-    div{
-        display: flex;
-        align-items: center;
-    }
+  }
 }
-h2{
-    text-align: center;
+h2 {
+  text-align: center;
 }

@@ -1,17 +1,23 @@
-<mat-sidenav-container  *ngIf="{isLtMd: isLtMd$ | async} as data">
-    <mat-sidenav class="right-sidenav" #rightSidenav mode="over" position="end">
+<mat-sidenav-container *ngIf="{isLtMd: isLtMd$ | async} as data">
+    <mat-sidenav #rightSidenav mode="over" position="end">
         <button mat-icon-button (click)="rightSidenav.close()"><mat-icon>close</mat-icon></button>
         <mat-tab-group>
             <mat-tab>
-                <ng-template mat-tab-label><div [matBadge]="favoritesCount || null" matBadgeColor="accent" ><mat-icon >favorite</mat-icon>Favorites</div></ng-template>
+                <ng-template mat-tab-label>
+                    <div [matBadge]="favoritesCount || null" matBadgeColor="accent">
+                        <mat-icon>favorite</mat-icon>Favorites
+                    </div>
+                </ng-template>
                 <ng-template matTabContent>
-                    <ng-container *ngIf="favorites$ | async as favorites" >
+                    <ng-container *ngIf="favorites$ | async as favorites">
                         <mat-list *ngIf="favorites.length > 0; else noFavorites">
-                            <mat-list-item (click)="rightSidenav.close()" replaceUrl="true" [routerLink]="['/dashboard/products', f.id_item]" *ngFor="let f of favorites">
+                            <mat-list-item (click)="rightSidenav.close()" replaceUrl="true"
+                                [routerLink]="['/dashboard/products', f.id_item]" *ngFor="let f of favorites">
                                 <span matListItemTitle>{{f.product.name}}</span>
                                 <span matListItemLine>{{f.product.creator.username}}</span>
                                 <div matListItemMeta>
-                                    <button mat-icon-button (click)="unlike(f.id_favourite); $event.stopPropagation()"><mat-icon>remove</mat-icon></button>
+                                    <button mat-icon-button
+                                        (click)="unlike(f.id_favourite); $event.stopPropagation()"><mat-icon>remove</mat-icon></button>
                                 </div>
                             </mat-list-item>
                         </mat-list>
@@ -21,15 +27,22 @@
                     </ng-container>
                 </ng-template>
             </mat-tab>
-            <mat-tab >
-                <ng-template mat-tab-label><div [matBadge]="notificationsCount || null" matBadgeColor="accent" ><mat-icon>notifications</mat-icon>Notifications</div></ng-template>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <div [matBadge]="notificationsCount || null" matBadgeColor="accent">
+                        <mat-icon>notifications</mat-icon>Notifications
+                    </div>
+                </ng-template>
                 <ng-template matTabContent>
                     <mat-list *ngIf="notifications && notifications.length > 0; else noNotifications">
-                        <mat-list-item (click)="rightSidenav.close()" replaceUrl="true" [routerLink]="d.id_item ? ['/dashboard/products', d.id_item] : ['/dashboard/my-profile']" *ngFor="let d of notifications">
+                        <mat-list-item (click)="rightSidenav.close()" replaceUrl="true"
+                            [routerLink]="d.id_item ? ['/dashboard/products', d.id_item] : ['/dashboard/my-profile']"
+                            *ngFor="let d of notifications">
                             <h3 matListItemTitle>{{d.title_html}}</h3>
                             <span matListItemLine>{{d.body_html}}</span>
                             <div matListItemMeta>
-                                <button mat-icon-button (click)="deleteNotification(d.id_notification)"><mat-icon>remove</mat-icon></button>
+                                <button mat-icon-button
+                                    (click)="deleteNotification(d.id_notification)"><mat-icon>remove</mat-icon></button>
                             </div>
                         </mat-list-item>
                     </mat-list>
@@ -40,16 +53,22 @@
             </mat-tab>
         </mat-tab-group>
     </mat-sidenav>
-    <mat-sidenav  [mode]="data.isLtMd ? 'over' : 'side'" #sidenav>
+    <mat-sidenav class="left-sidenav" [style.minWidth]="data.isLtMd ? '30vw' : '15vw'"
+        [mode]="data.isLtMd ? 'over' : 'side'" #sidenav>
         <button (click)="sidenav.close()" mat-icon-button><mat-icon>close</mat-icon></button>
-        <mat-nav-list *ngIf="{count: (discussionsNotReadCount$ | async)} as ds">
-            <div  *ngFor="let link of links">
-                <a (click)="sidenav.close()" matBadgeColor="accent" [matBadgeHidden]="(!ds.count || ds.count <= 0) ? true : false" [matBadge]="link.path === 'discussions' ? ds.count : null" [routerLink]="[link.path]" mat-list-item [activated]="link.isActive">{{link.name}}</a>
+        <mat-nav-list *ngIf="{count: (discussionsNotReadCount$ | async)}as ds">
+            <div *ngFor="let link of links">
+                <a (click)="sidenav.close()" matBadgeColor="accent"
+                    [matBadgeHidden]="(!ds.count || ds.count <= 0) ? true : false"
+                    [matBadge]="link.path === 'discussions' ? ds.count : null" [routerLink]="[link.path]" mat-list-item
+                    [activated]="link.isActive">{{link.name}}</a>
             </div>
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
-        <app-header [newsCount]="notificationsCount" (onToggleRightSidenav)="rightSidenav.toggle()" [isAuthenticated]="isAuthenticated" (logoutEvent)="logout()" (toggleSidenavMenu)="sidenav.toggle()"></app-header>
+        <app-header [discussionsNewsCount]="(discussionsNotReadCount$ | async) || 0" [newsCount]="notificationsCount"
+            (onToggleRightSidenav)="rightSidenav.toggle()" [isAuthenticated]="isAuthenticated" (logoutEvent)="logout()"
+            (toggleSidenavMenu)="sidenav.toggle()"></app-header>
         <router-outlet></router-outlet>
         <app-footer></app-footer>
     </mat-sidenav-content>

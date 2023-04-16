@@ -33,12 +33,12 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
 import { DiscussionsService } from "src/app/core/http/discussions.service";
-import { DiscussionsStore } from "../services/discussions.store";
+import { DiscussionsStore } from "../../services/discussions.store";
 import { Discussion } from "src/app/shared/interfaces/discussion/discussion";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { LikeButtonComponent } from "src/app/shared/components/like-button/like-button.component";
 import { Favourite } from "src/app/shared/interfaces/favourite";
-import { FavoritesStore } from "../services/favorites.store";
+import { FavoritesStore } from "../../services/favorites.store";
 
 @Component({
   standalone: true,
@@ -55,60 +55,71 @@ import { FavoritesStore } from "../services/favorites.store";
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    LikeButtonComponent
+    LikeButtonComponent,
   ],
   templateUrl: "./product-view.component.html",
   styleUrls: ["./product-view.component.scss"],
 })
-export class ProductViewComponent implements OnInit, OnDestroy{
+export class ProductViewComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private breakpoints = inject(BreakpointObserver);
-  private bidService = inject(BidService)
+  private bidService = inject(BidService);
   private bidModal = inject(ProductsService);
-  private discussionService = inject(DiscussionsService)
-  private discussionStore = inject(DiscussionsStore)
-  private favoritesStore = inject(FavoritesStore)
-  private router = inject(Router)
-  private location = inject(Location)
+  private discussionService = inject(DiscussionsService);
+  private discussionStore = inject(DiscussionsStore);
+  private favoritesStore = inject(FavoritesStore);
+  private router = inject(Router);
+  private location = inject(Location);
   userId: number | null;
 
-  isLtGt$ = this.breakpoints
+  isLtMd$ = this.breakpoints
     .observe([Breakpoints.XSmall, Breakpoints.Small])
     .pipe(map((v) => v.matches));
   product: ParticularItem | null;
   productId: number;
-  private destroy$ = new Subject()
+  private destroy$ = new Subject();
   translateX: number = 0;
   imageIndex: number = 0;
   isZoomed: boolean = false;
 
-  newDiscussionContent = new FormControl('', Validators.required)
+  newDiscussionContent = new FormControl("", Validators.required);
 
-  favourite$: Observable<Favourite | null>
+  favourite$: Observable<Favourite | null>;
   showFavIcon: boolean = false;
 
   ngOnInit(): void {
     this.route.paramMap
-    .pipe(
-      switchMap( p => {
-        const linkArray = p.get('id')?.split('-')
-        const id = linkArray![linkArray!.length - 1];
-        this.productId = +id;
-        return  this.route.data;
-      })
-      )
-      .subscribe( v => {
-        this.userId = v.userId as number
-        this.product = v.product as ParticularItem
-        if(this.product){
-          this.location.replaceState(this.router.url.replace(this.router.url.split('/').pop()!, this.product.name.replace(' ', '-') + '-' + this.productId))
-        }
-    })
-    if(this.userId){
-      this.favourite$ = this.favoritesStore.favorites$
       .pipe(
-        map( fs => (fs && fs.find( f => f.id_item == this.productId) as Favourite) || null),
-        tap( fs => fs ? this.showFavIcon = true : this.showFavIcon = false),
+        switchMap((p) => {
+          const linkArray = p.get("id")?.split("-");
+          const id = linkArray![linkArray!.length - 1];
+          this.productId = +id;
+          return this.route.data;
+        })
+      )
+      .subscribe((v) => {
+        this.userId = v.userId as number;
+        this.product = v.product as ParticularItem;
+        if (this.product) {
+          this.location.replaceState(
+            this.router.url.replace(
+              this.router.url.split("/").pop()!,
+              this.product.name.replace(" ", "-") + "-" + this.productId
+            )
+          );
+        }
+      });
+    if (this.userId) {
+      this.favourite$ = this.favoritesStore.favorites$.pipe(
+        map(
+          (fs) =>
+            (fs &&
+              (fs.find((f) => f.id_item == this.productId) as Favourite)) ||
+            null
+        ),
+        tap((fs) =>
+          fs ? (this.showFavIcon = true) : (this.showFavIcon = false)
+        )
       );
     }
   }
@@ -124,11 +135,11 @@ export class ProductViewComponent implements OnInit, OnDestroy{
         switchMap((bidPrice: number) => {
           if (bidPrice && this.userId) {
             this.product!.max_bid = bidPrice;
-            this.product!.id_bidder = this.userId
+            this.product!.id_bidder = this.userId;
             return this.bidService.bid(this.productId, bidPrice);
           }
           return of(null);
-        }),
+        })
       )
       .subscribe();
   }
@@ -144,18 +155,26 @@ export class ProductViewComponent implements OnInit, OnDestroy{
       this.translateX -= 100;
     }
   }
-  submit(){
-    if(this.newDiscussionContent.dirty && this.newDiscussionContent.valid && this.newDiscussionContent.value){
-      this.discussionService.createNewDiscussion(this.productId, this.newDiscussionContent.value)
-      .pipe(
-        tap(() => this.router.navigate(['/dashboard/discussions'])),
-        tap((res) => this.discussionStore.selectedDiscussion = res.id_discussion)
-      )
-      .subscribe()
+  submit() {
+    if (
+      this.newDiscussionContent.dirty &&
+      this.newDiscussionContent.valid &&
+      this.newDiscussionContent.value
+    ) {
+      this.discussionService
+        .createNewDiscussion(this.productId, this.newDiscussionContent.value)
+        .pipe(
+          tap(() => this.router.navigate(["/dashboard/discussions"])),
+          tap(
+            (res) =>
+              (this.discussionStore.selectedDiscussion = res.id_discussion)
+          )
+        )
+        .subscribe();
     }
   }
   ngOnDestroy(): void {
-    this.destroy$.next()
-    this.destroy$.unsubscribe()
+    this.destroy$.next();
+    this.destroy$.unsubscribe();
   }
 }

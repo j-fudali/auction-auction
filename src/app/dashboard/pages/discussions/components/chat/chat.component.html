@@ -1,32 +1,36 @@
-<mat-card>
+<mat-card *ngIf="{isLtMd: (isLtMd$ | async)} as bp">
     <mat-card-header>
-        <img mat-card-avatar [src]="userId === discussion.discussion_creator.id_user ?  discussion.item.creator_avatar : discussion.discussion_creator.avatar">
-        <h2 mat-card-title>{{userId === discussion.discussion_creator.id_user ? discussion.item.creator_username : discussion.discussion_creator.username}}</h2>
+        <img mat-card-avatar
+            [src]="userId === discussion.discussion_creator.id_user ?  discussion.item.creator_avatar : discussion.discussion_creator.avatar">
+        <h2 mat-card-title>{{userId === discussion.discussion_creator.id_user ? discussion.item.creator_username :
+            discussion.discussion_creator.username}}</h2>
         <h4 mat-card-title>Product: {{discussion.item.name}}</h4>
     </mat-card-header>
-    <mat-card-content *ngIf="{isLtMd: (isLtMd$ | async)} as bp">
-        <mat-list appScrollable infiniteScroll  [scrollWindow]="false" (scrolledUp)="onScrollUp()">
-            <mat-progress-bar  *ngIf="loading " mode="indeterminate" color="accent"></mat-progress-bar>
+    <mat-card-content>
+        <mat-list appScrollable infiniteScroll [scrollWindow]="false" (scrolledUp)="onScrollUp()">
+            <mat-progress-bar *ngIf="loading " mode="indeterminate" color="accent"></mat-progress-bar>
             <mat-list-item *ngIf="chat.current_page === chat.pages" class="beginning-of-chat">
-                <h3  matListItemTitle>Beginning of discussion!</h3>
+                <h3 matListItemTitle>Beginning of discussion!</h3>
             </mat-list-item>
-            <mat-list-item appOffsetTop  class="message" lines="8" *ngFor="let message of chat.result"
+            <mat-list-item appOffsetTop class="message" lines="8" *ngFor="let message of chat.result"
                 [style.margin]="message.id_sender == userId ? 'auto 0 5px auto' : 'auto auto 5px 0'"
-                [style.borderColor]="message.id_sender == userId ? '#8a89898b' : '#8a898932'"
-                >
+                [style.borderColor]="message.id_sender == userId ? '#8a89898b' : '#8a898932'">
                 <div matListItemAvatar class="image-wrapper">
-                    <img  [src]="message.id_sender === discussion.discussion_creator.id_user ? discussion.discussion_creator.avatar : discussion.item.creator_avatar">
+                    <img
+                        [src]="message.id_sender === discussion.discussion_creator.id_user ? discussion.discussion_creator.avatar : discussion.item.creator_avatar">
                 </div>
-                <span  matListItemTitle>{{message.id_sender === discussion.discussion_creator.id_user ? discussion.discussion_creator.username : discussion.item.creator_username }}</span>
-                <div [style.height]="bp.isLtMd ? '20vh' : '40vh'" *ngIf="message.image" class="image-wrapper message-image" matListItemLine>
-                    <img  [src]="message.image">
+                <span matListItemTitle>{{message.id_sender === discussion.discussion_creator.id_user ?
+                    discussion.discussion_creator.username : discussion.item.creator_username }}</span>
+                <div [style.height]="bp.isLtMd ? '20vh' : '40vh'" *ngIf="message.image"
+                    class="image-wrapper message-image" matListItemLine>
+                    <img [src]="message.image">
                 </div>
                 <p>{{message.content}}</p>
                 <small class="createdAt">{{message.created_at + 'Z'| date}}</small>
             </mat-list-item>
         </mat-list>
     </mat-card-content>
-    <mat-card-footer >
-        <app-new-message-input (newMessageSend)="onNewMessage($event)"  #newMessage></app-new-message-input>
+    <mat-card-footer>
+        <app-new-message-input (newMessageSend)="onNewMessage($event)" #newMessage></app-new-message-input>
     </mat-card-footer>
 </mat-card>

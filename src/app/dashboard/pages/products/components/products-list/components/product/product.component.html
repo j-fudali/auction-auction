@@ -1,12 +1,14 @@
 <div class="container" *ngIf="{isLtMd: (isLtMd$ | async)} as bp">
     <div class="image-wrapper">
-        <img  [ngSrc]="product.image || 'assets/noimage.jpg'" priority fill>
+        <img [ngSrc]="product.image || 'assets/noimage.jpg'" priority fill>
     </div>
     <div class="content">
         <div class="header">
             <h2>{{product.name}}</h2>
-            <div>
-                <app-like-button [showFavIcon]="showFavIcon" [productId]="product.id_item" [favorite]="f.favorite || null" *ngIf="userId && (userId != product.creator.id_user) && {favorite: favourite$ | async} as f"></app-like-button>
+            <div [style.fontSize]="bp.isLtMd ? '12px' : '16px'">
+                <app-like-button [showFavIcon]="showFavIcon" [productId]="product.id_item"
+                    [favorite]="f.favorite || null"
+                    *ngIf="userId && (userId != product.creator.id_user) && {favorite: favourite$ | async} as f"></app-like-button>
                 <ng-container *ngIf="userId">
                     <ng-container *ngIf="product.id_bidder == userId; else owner">
                         <h4>You already bidded this product</h4>
@@ -17,7 +19,8 @@
                         </ng-container>
                     </ng-template>
                     <ng-template #canBid>
-                        <button matTooltip="Bid product" mat-icon-button (click)="bid()"><mat-icon>add_shopping_cart</mat-icon></button>
+                        <button matTooltip="Bid product" mat-icon-button
+                            (click)="bid()"><mat-icon>add_shopping_cart</mat-icon></button>
                     </ng-template>
                 </ng-container>
                 <h4>Actual price: {{product.max_bid || product.starting_price | number:'1.2'}}</h4>
@@ -30,7 +33,9 @@
             </div>
             <mat-chip>{{product.category}}</mat-chip>
             <div class="details-footer">
-                <small>Time left: <i>{{product.ending_time | timeLeft | async}}</i></small>
+                <small [style.fontSize]="bp.isLtMd ? '11px' : 'initial'">Time left: <i>{{product.ending_time | timeLeft
+                        |
+                        async}}</i></small>
                 <a mat-stroked-button [routerLink]="['/dashboard/products', product.id_item]">More</a>
             </div>
         </div>

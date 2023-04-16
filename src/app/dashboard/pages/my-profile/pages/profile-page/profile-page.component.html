@@ -1,20 +1,25 @@
 <ng-container *ngIf="{isLtMd: (isLtMd$ | async)} as bp">
     <div class="container" [style.flexDirection]="bp.isLtMd ? 'column': 'row'"
-        [style.padding]="bp.isLtMd ? '10px 50px' : '10px 175px'">
+        [style.padding]="bp.isLtMd ? '10px 10px' : '10px 175px'">
         <mat-card>
             <mat-card-header>
                 <img mat-card-avatar [src]="userData.avatar!">
                 <mat-card-title-group>
-                <mat-card-title>{{userData.username}}</mat-card-title>
-                    <mat-card-subtitle>Fullname: <u>{{userData.first_name}} {{userData.last_name}}</u></mat-card-subtitle>
+                    <mat-card-title>{{userData.username}}</mat-card-title>
+                    <mat-card-subtitle>Fullname: <u>{{userData.first_name}}
+                            {{userData.last_name}}</u></mat-card-subtitle>
                     <mat-card-subtitle>E-mail: <u>{{userData.email}}</u></mat-card-subtitle>
-                    <mat-card-subtitle>Born: <u>{{userData.birth_date + 'Z' | date:'dd.MM.yyyy'}}</u></mat-card-subtitle>
+                    <mat-card-subtitle>Born: <u>{{userData.birth_date + 'Z' |
+                            date:'dd.MM.yyyy'}}</u></mat-card-subtitle>
                 </mat-card-title-group>
-                <div [style.flexDirection]="!notGeneratedYet || clickedGenerated ? 'column' : 'row'" class="generate-raport">
-                    <button [disabled]="!notGeneratedYet || clickedGenerated" (click)="generateReport()" mat-stroked-button type="button">Generate report</button>
-                    <small *ngIf="!notGeneratedYet && (reportStatus$ | async)?.is_completed === 1"><i>Already generated</i></small>
+                <div [style.flexDirection]="!notGeneratedYet || clickedGenerated ? 'column' : 'row'"
+                    class="generate-raport">
+                    <button [disabled]="!notGeneratedYet || clickedGenerated" (click)="generateReport()"
+                        mat-stroked-button type="button">Generate report</button>
+                    <small *ngIf="!notGeneratedYet && (reportStatus$ | async)?.is_completed === 1"><i>Already
+                            generated</i></small>
                     <div class="generating" *ngIf="(reportStatus$ | async)?.is_completed === 0 || clickedGenerated">
-                        <mat-spinner  [diameter]="50" color="accent"></mat-spinner>
+                        <mat-spinner [diameter]="50" color="accent"></mat-spinner>
                         <small><i>generating...</i></small>
                     </div>
                 </div>

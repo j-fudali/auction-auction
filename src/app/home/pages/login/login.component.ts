@@ -38,44 +38,47 @@ export class LoginComponent implements OnInit {
   waitToLoginTime: number = 30;
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      usernameOrEmail: ["", Validators.required],
+      email: ["", [Validators.required, Validators.email]],
       password: ["", Validators.required],
     });
   }
 
-  get usernameOrEmail(): AbstractControl | null {
-    return this.loginForm.get("usernameOrEmail");
+  get email(): AbstractControl | null {
+    return this.loginForm.get("email");
   }
   get password(): AbstractControl | null {
     return this.loginForm.get("password");
   }
-  wait(){
+  wait() {
     this.waitToLoginTime = 30;
     const timout = setInterval(() => {
-      if(this.waitToLoginTime == 0){
-        this.attemptsNumber = 5
+      if (this.waitToLoginTime == 0) {
+        this.attemptsNumber = 5;
         clearInterval(timout);
       }
-      this.waitToLoginTime--
-      }, 1000)
+      this.waitToLoginTime--;
+    }, 1000);
   }
   onSubmit(): void {
-    this._userService.login(this.usernameOrEmail?.value, this.password?.value)
-    .subscribe((res) => {
-      if(res){
-        this.authService.setToken(res.token);
-        this.authService.setRefreshToken(res.refresh_token);
-        this._router.navigate(["/dashboard"]);
+    this._userService.login(this.email?.value, this.password?.value).subscribe(
+      (res) => {
+        if (res) {
+          this.authService.setToken(res.token);
+          this.authService.setRefreshToken(res.refresh_token);
+          this._router.navigate(["/dashboard"]);
+        }
+      },
+      (err: HttpErrorResponse) => {
+        if (
+          (err.status === 400 || err.status === 422) &&
+          this.attemptsNumber > 0
+        )
+          this.attemptsNumber--;
+        if (this.attemptsNumber == 0) {
+          this.wait();
+          return;
+        }
       }
-    },
-    (err: HttpErrorResponse) => {
-      if((err.status === 400 || err.status === 422) && this.attemptsNumber > 0) this.attemptsNumber--;
-      if(this.attemptsNumber == 0){
-        console.log('asdfasd')
-        this.wait()
-        return;
-      }
-    }
     );
   }
 }

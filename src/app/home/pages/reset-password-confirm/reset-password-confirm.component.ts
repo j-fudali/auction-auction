@@ -34,7 +34,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
     <mat-error *ngIf="rePassword?.hasError('required')"><small>Required field</small></mat-error>
     <mat-error *ngIf="rePassword?.hasError('passwordsNotMatch')"><small>Passwords are not the same</small></mat-error>
   </mat-form-field>
-  <button type="submit" mat-stroked-button>Zatwierdź</button>
+  <button type="submit" mat-stroked-button>Send</button>
 </form>
 `,
   styles: [
